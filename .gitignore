@@ -31,7 +31,7 @@ yarn-error.log*
 .env*.local
 
 # git-crypt
-git-crypt-key
+shipmunk-git-crypt-key
 
 # typescript
 *.tsbuildinfo
