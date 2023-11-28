@@ -35,3 +35,7 @@ git-crypt-key
 
 # typescript
 *.tsbuildinfo
+
+# yalc
+/.yalc
+yalc.lock
