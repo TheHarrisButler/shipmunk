@@ -18,9 +18,7 @@ The following tools are required or recommended for contributing and running Shi
 
 ### Decrypt Secrets
 
-Before running the application locally, you must decrypt secrets using `git-crypt`. To do this, you must first download the **Elements-demo git-crypt key** from the ShipEngine – Engineering 1Password vault and place it at the root of your local copy of this repository. With the file in place, run `yarn crypt:unlock` to decypt all encrypted files.
-
-There have been cases where some have not been able to download the file from the web version of 1password. If that is that case download the 1password app and get the key from there.
+Before running the application locally, you must decrypt secrets using `git-crypt`. To do this, you must first download the **Shipmunk git-crypt key** from the ShipEngine – Engineering 1Password vault and place it at the root of your local copy of this repository. With the file in place, run `yarn crypt:unlock` to decypt all encrypted files.
 
 ### Run
 
