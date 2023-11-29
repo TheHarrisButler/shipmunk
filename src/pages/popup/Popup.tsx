@@ -52,9 +52,6 @@ export default function Popup(): JSX.Element {
         <div css={styles.container}>
           <div css={styles.toolBar}>
             <h1>Shipmunk</h1>
-            <button>
-              <span>Create new quick label</span>
-            </button>
           </div>
           {selectedLabel && <ViewShipment.Element shipmentId={selectedLabel} />}
           <h2>Labels</h2>
