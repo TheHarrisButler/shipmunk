@@ -18,7 +18,10 @@ try {
   console.log("content script loaded");
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    wizardProcess();
+    console.log({ request, sender, sendResponse });
+    if (request.active) startEngine();
+
+    if (request.wizard) wizardProcess();
     wizardInProgress = true;
   });
 
@@ -126,5 +129,27 @@ const SelectionMode = ({ text }) => {
       <p>{text}</p>
       <button>Correct</button>
     </div>
+  );
+};
+
+function startEngine() {
+  root.render(<Engine />);
+}
+
+const Engine = () => {
+  return (
+    <div
+      style={{
+        backgroundColor: "black",
+        width: "100px",
+        height: "100px",
+        borderRadius: "100rem",
+        display: "block",
+        position: "fixed",
+        bottom: "80px",
+        right: "80px",
+        boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
+      }}
+    ></div>
   );
 };
