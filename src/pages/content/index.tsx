@@ -25,22 +25,22 @@ try {
     wizardInProgress = true;
   });
 
-  document.addEventListener("mouseup", () => {
-    const selectedText = window.getSelection()?.toString();
+  // document.addEventListener("mouseup", () => {
+  //   const selectedText = window.getSelection()?.toString();
 
-    if (selectedText?.length)
-      try {
-        console.log("Sending transmission");
+  //   if (selectedText?.length)
+  //     try {
+  //       console.log("Sending transmission");
 
-        port.postMessage({ text: selectedText });
-        console.log("Transmission Sent");
+  //       port.postMessage({ text: selectedText });
+  //       console.log("Transmission Sent");
 
-        !wizardInProgress && root.render(<SelectionMode text={selectedText} />);
-      } catch (error) {
-        console.error("Could not send message");
-        console.error({ error });
-      }
-  });
+  //       !wizardInProgress && root.render(<SelectionMode text={selectedText} />);
+  //     } catch (error) {
+  //       console.error("Could not send message");
+  //       console.error({ error });
+  //     }
+  // });
 
   // document.addEventListener("click", (event) => {
   //   const clickedElement = event.target;
