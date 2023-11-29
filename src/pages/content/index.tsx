@@ -178,6 +178,14 @@ const Menu = () => {
         backgroundColor: "grey",
         border: "1px solid #777",
       }}
-    ></div>
+    >
+      <h1>Menu</h1>
+      <ul>
+        <li>Create Label</li>
+        <li>Use Wizard</li>
+        <li>Settigns</li>
+        <li>Void label</li>
+      </ul>
+    </div>
   );
 };
