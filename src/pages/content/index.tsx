@@ -137,18 +137,48 @@ function startEngine() {
 }
 
 const Engine = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div
       style={{
-        backgroundColor: "black",
-        width: "100px",
-        height: "100px",
-        borderRadius: "100rem",
-        display: "block",
+        display: "flex",
+        flexDirection: "column-reverse",
+        gap: "16px",
         position: "fixed",
         bottom: "80px",
-        right: "80px",
-        boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
+        right: "240px",
+      }}
+    >
+      <button
+        id="engine-button"
+        style={{
+          display: "block",
+          backgroundColor: "black",
+          width: "100px",
+          height: "100px",
+          borderRadius: "100rem",
+          boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
+        }}
+        onClick={() => setMenuOpen(!menuOpen)}
+      ></button>
+      {menuOpen && (
+        <div id="engine-menu">
+          <Menu />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Menu = () => {
+  return (
+    <div
+      style={{
+        display: "block",
+        width: "200px",
+        height: "600px",
+        backgroundColor: "grey",
+        border: "1px solid #777",
       }}
     ></div>
   );
