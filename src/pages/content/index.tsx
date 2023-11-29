@@ -162,7 +162,7 @@ const Engine = () => {
     >
       {menuOpen && (
         <div id="engine-menu">
-          <Menu />
+          <Menu textSelection={textSelection} />
         </div>
       )}
       <button
@@ -244,7 +244,7 @@ const Engine = () => {
   );
 };
 
-const Menu = () => {
+const Menu = ({ textSelection }) => {
   return (
     <div
       style={{
@@ -256,23 +256,32 @@ const Menu = () => {
         border: "1px solid #777",
       }}
     >
-      <h1>Menu</h1>
-      <ul>
-        <li>
-          <button>Create Label</button>
-        </li>
-        <li>
-          <button onClick={() => console.log("start wizard")}>
-            Use Wizard
-          </button>
-        </li>
-        <li>
-          <button>Settings</button>
-        </li>
-        <li>
-          <button>Void label</button>
-        </li>
-      </ul>
+      {textSelection?.length ? (
+        <>
+          <h1>Purchase Label Element</h1>
+          <p>{textSelection}</p>
+        </>
+      ) : (
+        <>
+          <h1>Menu</h1>
+          <ul>
+            <li>
+              <button>Create Label</button>
+            </li>
+            <li>
+              <button onClick={() => console.log("start wizard")}>
+                Use Wizard
+              </button>
+            </li>
+            <li>
+              <button>Settings</button>
+            </li>
+            <li>
+              <button>Void label</button>
+            </li>
+          </ul>
+        </>
+      )}
     </div>
   );
 };
