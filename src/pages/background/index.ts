@@ -1,5 +1,11 @@
 console.log("background script loaded");
 
+// listen for clicks on the extension icon
+chrome.action.onClicked.addListener((res) => {
+  console.log("icon clicked");
+  console.log({ res });
+});
+
 // selection communication
 chrome.runtime.onConnect.addListener((port) => {
   console.log("Awaiting Transmissions");
