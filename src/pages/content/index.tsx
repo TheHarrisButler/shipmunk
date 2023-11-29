@@ -141,14 +141,16 @@ const Engine = () => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column-reverse",
-        gap: "16px",
         position: "fixed",
         bottom: "80px",
         right: "240px",
       }}
     >
+      {menuOpen && (
+        <div id="engine-menu">
+          <Menu />
+        </div>
+      )}
       <button
         id="engine-button"
         style={{
@@ -161,11 +163,6 @@ const Engine = () => {
         }}
         onClick={() => setMenuOpen(!menuOpen)}
       ></button>
-      {menuOpen && (
-        <div id="engine-menu">
-          <Menu />
-        </div>
-      )}
     </div>
   );
 };
@@ -175,6 +172,7 @@ const Menu = () => {
     <div
       style={{
         display: "block",
+        position: "relative",
         width: "200px",
         height: "600px",
         backgroundColor: "grey",
