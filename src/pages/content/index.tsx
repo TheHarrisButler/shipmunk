@@ -56,8 +56,7 @@ function wizardProcess() {
   root.render(<WizardMode port={port} />);
 }
 
-const WizardMode = ({ port }) => {
-  const [steps, setSteps] = useState(0);
+const WizardMode = ({ children }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -66,48 +65,12 @@ const WizardMode = ({ port }) => {
       const text = clickedElement.textContent || clickedElement.innerText;
 
       setData((data) => [...data, text]);
-      setSteps((steps) => steps + 1);
-
-      // port.postMessage({ click: "clicked", text });
     };
     document.addEventListener("click", handleClick);
     () => document.removeEventListener("click", handleClick);
   }, []);
 
-  const begoneWizard = () => {
-    root.unmount();
-  };
-
-  return (
-    <div
-      style={{
-        backgroundColor: "black",
-        display: "block",
-        position: "fixed",
-        top: "20%",
-        left: "50%",
-        width: "500px",
-        height: "500px",
-        color: "white",
-      }}
-    >
-      <h1>I am wizard mode!</h1>
-      <div>
-        {steps < 3 ? (
-          <p>click on field for step {steps + 1}</p>
-        ) : (
-          <button
-            onClick={() => {
-              port.postMessage({ wizardSubmit: true, data });
-              begoneWizard();
-            }}
-          >
-            Finish
-          </button>
-        )}
-      </div>
-    </div>
-  );
+  return <div>{children(data)}</div>;
 };
 
 const SelectionMode = ({ text }) => {
@@ -249,6 +212,8 @@ const Engine = () => {
 };
 
 const Menu = ({ textSelection }) => {
+  const [displayWizard, setDisplayWizard] = useState(false);
+
   return (
     <div
       style={{
@@ -260,7 +225,16 @@ const Menu = ({ textSelection }) => {
         border: "1px solid #777",
       }}
     >
-      {textSelection?.length ? (
+      {displayWizard ? (
+        <WizardMode>
+          {(data) => (
+            <>
+              <h1>Purchase Label Element</h1>
+              <p>{data}</p>
+            </>
+          )}
+        </WizardMode>
+      ) : textSelection?.length ? (
         <>
           <h1>Purchase Label Element</h1>
           <p>{textSelection}</p>
@@ -273,9 +247,7 @@ const Menu = ({ textSelection }) => {
               <button>Create Label</button>
             </li>
             <li>
-              <button onClick={() => console.log("start wizard")}>
-                Use Wizard
-              </button>
+              <button onClick={() => setDisplayWizard(true)}>Use Wizard</button>
             </li>
             <li>
               <button>Settings</button>
