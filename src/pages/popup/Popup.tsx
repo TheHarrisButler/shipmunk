@@ -1,6 +1,7 @@
 import { AlchemyProvider } from "@shipengine/alchemy";
 import { RootPortalProvider } from "@shipengine/elements";
 import { createStyles } from "../../utils";
+import { LabelsGrid } from "@src/components";
 
 export default function Popup(): JSX.Element {
   const getToken = async () => {
@@ -19,6 +20,7 @@ export default function Popup(): JSX.Element {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
+      width: "100%",
     },
     toolBar: {
       display: "flex",
@@ -45,7 +47,10 @@ export default function Popup(): JSX.Element {
               <span>Create new quick label</span>
             </button>
           </div>
-          <div>{/** TODO: Add labels grid here */}</div>
+          <h2>Labels</h2>
+          <div>
+            <LabelsGrid />
+          </div>
         </div>
       </RootPortalProvider>
     </AlchemyProvider>

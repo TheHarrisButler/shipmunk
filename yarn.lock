@@ -1561,6 +1561,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@shipengine/react-api@npm:^0.23.3":
+  version: 0.23.3
+  resolution: "@shipengine/react-api@npm:0.23.3"
+  peerDependencies:
+    "@shipengine/js-api": 0.x
+    react: 18.x
+    react-dom: 18.x
+    react-query: 3.x
+  checksum: 6f5a0f67a2675be5ec42dfc4fc028db56e721f51574a8bb35a44e22ca178bda28c02859e150fb55bc1e85368d23ea31412d3f535ebfc544085bd869a6a0244f9
+  languageName: node
+  linkType: hard
+
 "@sinclair/typebox@npm:^0.24.1":
   version: 0.24.51
   resolution: "@sinclair/typebox@npm:0.24.51"
@@ -7780,6 +7792,7 @@ __metadata:
     "@packlink/giger": ^68.19.6
     "@shipengine/alchemy": ^2.4.1
     "@shipengine/elements": ^0.37.21
+    "@shipengine/react-api": ^0.23.3
     "@types/chrome": ^0.0.237
     "@types/cors": ^2.8.17
     "@types/jsonwebtoken": ^9.0.5

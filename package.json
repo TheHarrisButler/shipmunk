@@ -16,6 +16,7 @@
     "@packlink/giger": "^68.19.6",
     "@shipengine/alchemy": "^2.4.1",
     "@shipengine/elements": "^0.37.21",
+    "@shipengine/react-api": "^0.23.3",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
