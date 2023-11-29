@@ -138,6 +138,20 @@ function startEngine() {
 
 const Engine = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [textSelection, setTextSelection] = useState("");
+
+  // listen for text select when engine has started
+  useEffect(() => {
+    const handleTextSelect = (event) => {
+      const selectedText = window.getSelection()?.toString() ?? "";
+
+      if (selectedText?.length) setTextSelection(selectedText);
+    };
+    document.addEventListener("mouseup", handleTextSelect);
+
+    return () => document.removeEventListener("mouseup", handleTextSelect);
+  }, []);
+
   return (
     <div
       style={{
