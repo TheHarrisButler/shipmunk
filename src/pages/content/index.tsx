@@ -145,7 +145,11 @@ const Engine = () => {
     const handleTextSelect = (event) => {
       const selectedText = window.getSelection()?.toString() ?? "";
 
-      if (selectedText?.length) setTextSelection(selectedText);
+      if (selectedText?.length) {
+        setTextSelection(selectedText);
+        // automatically open the menu if its not open yet
+        if (!menuOpen) setMenuOpen(true);
+      }
     };
     document.addEventListener("mouseup", handleTextSelect);
 
