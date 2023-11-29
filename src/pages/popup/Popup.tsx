@@ -1,7 +1,8 @@
 import { AlchemyProvider } from "@shipengine/alchemy";
-import { RootPortalProvider } from "@shipengine/elements";
+import { RootPortalProvider, ViewShipment } from "@shipengine/elements";
 import { createStyles } from "../../utils";
 import { LabelsGrid } from "@src/components";
+import React from "react";
 
 export default function Popup(): JSX.Element {
   const getToken = async () => {
@@ -13,6 +14,14 @@ export default function Popup(): JSX.Element {
 
     return token;
   };
+
+  const [selectedLabel, setSelectedLabel] = React.useState<null | string>(null);
+
+  const updateSelectedLabel = (shipmentId: string) => {
+    setSelectedLabel(shipmentId);
+  };
+
+  console.log("selected label", selectedLabel);
 
   const styles = createStyles({
     container: {
@@ -47,9 +56,10 @@ export default function Popup(): JSX.Element {
               <span>Create new quick label</span>
             </button>
           </div>
+          {selectedLabel && <ViewShipment.Element shipmentId={selectedLabel} />}
           <h2>Labels</h2>
           <div>
-            <LabelsGrid />
+            <LabelsGrid setSelectedLabel={updateSelectedLabel} />
           </div>
         </div>
       </RootPortalProvider>

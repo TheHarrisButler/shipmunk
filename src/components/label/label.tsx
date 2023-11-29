@@ -3,6 +3,7 @@ import { styles } from "./label.styles";
 
 export type LabelProps = {
   label: SE.Label;
+  handleClick: (shipmentId: string) => void;
   //   carrier: string;
   //   shippingAmount: string;
   //   shipDate: string;
@@ -19,6 +20,7 @@ export type LabelProps = {
 
 export const Label = ({
   label,
+  handleClick,
 }: //   carrier,
 //   shippingAmount,
 //   shipDate,
@@ -36,7 +38,13 @@ LabelProps) => {
     );
   };
   return (
-    <article css={styles.article} role="option">
+    <article
+      css={styles.article}
+      role="option"
+      onClick={() => {
+        handleClick(label.shipmentId);
+      }}
+    >
       <section css={styles.section}>
         <img
           alt={label.carrierCode}

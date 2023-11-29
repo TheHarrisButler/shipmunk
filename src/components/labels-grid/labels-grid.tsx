@@ -1,8 +1,12 @@
 import { useListLabels } from "@shipengine/alchemy";
 import { Label } from "../label/label";
+import { Dispatch } from "react";
 // import { PurchaseLabel, ViewShipment } from "@shipengine/elements";
+export type LabelsGridProps = {
+  setSelectedLabel: (shipmentId: string) => void;
+};
 
-export const LabelsGrid = () => {
+export const LabelsGrid = ({ setSelectedLabel }: LabelsGridProps) => {
   const { data: labels, isLoading: labelsLoading } = useListLabels();
 
   console.log(labels, labelsLoading);
@@ -14,7 +18,11 @@ export const LabelsGrid = () => {
       {labels && (
         <section css={{ width: "100%" }} role="radiogroup">
           {labels.map((label) => (
-            <Label key={label.labelId} label={label} />
+            <Label
+              handleClick={setSelectedLabel}
+              key={label.labelId}
+              label={label}
+            />
           ))}
         </section>
       )}
