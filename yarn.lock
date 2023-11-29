@@ -1474,23 +1474,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shipengine/alchemy@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@shipengine/alchemy@npm:2.1.0"
-  peerDependencies:
-    "@emotion/react": 11.x
-    "@packlink/brands": 4.x.x
-    "@packlink/giger": 68.x.x
-    "@packlink/giger-theme": 1.x.x
-    i18next: 22.x
-    react: 17.x || 18.x
-    react-dom: 17.x || 18.x
-    react-i18next: 3.x
-    react-query: 3.x
-  checksum: 790c291cfb5be2265a21ebc801e2e17e5f2fe43d1dd88571a149726eb7ee3bab5c4d9392f911a04feb8726cab8d11e3934b207b02c526b522ee9baec85059481
-  languageName: node
-  linkType: hard
-
 "@shipengine/alchemy@npm:^2.4.1":
   version: 2.4.1
   resolution: "@shipengine/alchemy@npm:2.4.1"
