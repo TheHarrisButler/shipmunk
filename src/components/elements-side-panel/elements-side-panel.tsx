@@ -126,7 +126,7 @@ export const ElementSidePanel = ({
     sidePanel: {
       top: 0,
       right: 0,
-      width: "90%",
+      width: "100%",
       height: "100%",
       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
       padding: "20px",

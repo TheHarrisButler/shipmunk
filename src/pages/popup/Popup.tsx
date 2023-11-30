@@ -38,7 +38,6 @@ export default function Popup(): JSX.Element {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      width: "100%",
     },
     toolbar: {
       display: "flex",

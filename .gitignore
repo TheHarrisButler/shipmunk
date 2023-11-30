@@ -4,8 +4,6 @@
 /.pnp
 .pnp.js
 
-# env
-
 # testing
 /coverage
 
@@ -38,6 +36,7 @@ shipmunk-git-crypt-key
 # typescript
 *.tsbuildinfo
 
+# vscode
 .vscode/*
 
 # yalc
