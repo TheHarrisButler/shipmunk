@@ -11,7 +11,6 @@ export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [displayWizard, setDisplayWizard] = useState(false); // default should be for this to be the landing, use state for development
   const [textSelection, setTextSelection] = useState("");
-  const [wizardData, setWizardData] = useState([]);
 
   // handle text selection
   useEffect(() => {
@@ -27,18 +26,6 @@ export const Content = () => {
     document.addEventListener("mouseup", handleTextSelect);
 
     return () => document.removeEventListener("mouseup", handleTextSelect);
-  }, []);
-
-  // handle click events for the wizard
-  useEffect(() => {
-    const handleClick = (event) => {
-      const clickedElement = event.target;
-      const text = clickedElement.textContent || clickedElement.innerText;
-
-      setWizardData((data) => [...data, text]);
-    };
-    document.addEventListener("click", handleClick);
-    () => document.removeEventListener("click", handleClick);
   }, []);
 
   const getToken = async () => {
