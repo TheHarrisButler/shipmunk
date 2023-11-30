@@ -20,6 +20,7 @@ export const WizardUI = ({ handleSubmit }) => {
   const nextHandler = (stepData) => {
     setData((data) => [...data, stepData]);
     setStep(step + 1);
+    setSelectedText("");
   };
 
   const submitHandler = (event) => {
