@@ -94,6 +94,7 @@ export const Content = () => {
   return (
     <div
       css={{
+        zIndex: 9999,
         position: "fixed",
         bottom: "50px",
         right: "45px",
