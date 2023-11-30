@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 import { createRoot } from "react-dom/client";
 import { Content } from "./content";
 const div = document.createElement("div");
@@ -16,8 +14,7 @@ try {
   console.log("content script loaded");
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log({ request, sender, sendResponse });
-    // if the user clicked the icon
+    // if the user clicked on the extension icon display the bottom left button
     if (request.active) root.render(<Content />);
   });
 } catch (e) {
