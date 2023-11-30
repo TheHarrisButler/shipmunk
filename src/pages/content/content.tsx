@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Shipmunk } from "../../components";
 import { AlchemyProvider } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
@@ -7,6 +7,36 @@ import { keyframes } from "@emotion/react";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [textSelection, setTextSelection] = useState("");
+  const [wizardData, setWizardData] = useState([]);
+
+  // handle text selection
+  useEffect(() => {
+    const handleTextSelect = (event) => {
+      const selectedText = window.getSelection()?.toString() ?? "";
+
+      if (selectedText?.length) {
+        setTextSelection(selectedText);
+        // automatically open the menu if its not open yet
+        if (!isOpen) setIsOpen(true);
+      }
+    };
+    document.addEventListener("mouseup", handleTextSelect);
+
+    return () => document.removeEventListener("mouseup", handleTextSelect);
+  }, []);
+
+  // handle click events for the wizard
+  useEffect(() => {
+    const handleClick = (event) => {
+      const clickedElement = event.target;
+      const text = clickedElement.textContent || clickedElement.innerText;
+
+      setWizardData((data) => [...data, text]);
+    };
+    document.addEventListener("click", handleClick);
+    () => document.removeEventListener("click", handleClick);
+  }, []);
 
   const getToken = async () => {
     const response = await fetch(`http://localhost:3002/generate-token`, {
