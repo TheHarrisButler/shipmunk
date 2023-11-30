@@ -5,8 +5,11 @@ import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { createStyles } from "../../utils";
 import { keyframes } from "@emotion/react";
 
+import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
+
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [displayWizard, setDisplayWizard] = useState(false); // default should be for this to be the landing, use state for development
   const [textSelection, setTextSelection] = useState("");
   const [wizardData, setWizardData] = useState([]);
 
@@ -143,24 +146,30 @@ export const Content = () => {
                       alignItems: "center",
                     }}
                   >
-                    <button>Label Wizard</button>
+                    <button onClick={() => setDisplayWizard(true)}>
+                      Label Wizard
+                    </button>
                     <button>Label History</button>
                     <button onClick={toggleIsElementOpen}>X</button>
                   </div>
                 </div>
                 <div css={styles.elementContainer}>
-                  <PurchaseLabel.Element
-                    features={{
-                      presentation: { poweredByShipEngine: true },
-                      rateForm: { enableFunding: true },
-                    }}
-                    onLabelCreateSuccess={() => {
-                      // TODO
-                    }}
-                    printLabelLayout={
-                      "letter" // : '4x6'
-                    }
-                  />
+                  {displayWizard ? (
+                    <WizardUI />
+                  ) : (
+                    <PurchaseLabel.Element
+                      features={{
+                        presentation: { poweredByShipEngine: true },
+                        rateForm: { enableFunding: true },
+                      }}
+                      onLabelCreateSuccess={() => {
+                        // TODO
+                      }}
+                      printLabelLayout={
+                        "letter" // : '4x6'
+                      }
+                    />
+                  )}
                 </div>
               </div>
             )}
