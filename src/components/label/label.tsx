@@ -1,34 +1,20 @@
 import { SE } from "@shipengine/alchemy";
 import { styles } from "./label.styles";
+import { Icon, IconSize } from "@packlink/giger";
+import { IconNames } from "@packlink/giger-theme";
+import copy from "copy-to-clipboard";
 
 export type LabelProps = {
   label: SE.Label;
   handleClick: (shipmentId: string) => void;
-  //   carrier: string;
-  //   shippingAmount: string;
-  //   shipDate: string;
-  //   trackingNumber: string;
 };
 
-// TODO: Style each label to look like Rate Card
-// TODO: Get data in correct shape / format
-// TODO: Total Cost
-// TODO: Hover State
-// TODO: Selected State?
 // TODO: OnClick: open ViewShipment
-// TODO: Make tracking number copyable
 // TODO: ViewShipment Slide in from right
 // TODO: Close ViewShipment Button
 // TODO: Clear Shipment State on Close
 
-export const Label = ({
-  label,
-  handleClick,
-}: //   carrier,
-//   shippingAmount,
-//   shipDate,
-//   trackingNumber,
-LabelProps) => {
+export const Label = ({ label, handleClick }: LabelProps) => {
   const carrierCodeOverrides = {
     stamps_com: "stamps_com_wl",
     usps: "stamps_com_wl",
@@ -94,10 +80,17 @@ LabelProps) => {
       serviceCode
     );
   };
+
+  const formatDate = (date: string) => {
+    const dateObj = new Date(date);
+    return dateObj.toLocaleDateString();
+  };
+
+  const totalCost = label.shipmentCost.amount + label.insuranceCost?.amount;
+
   return (
     <article
       css={styles.article}
-      role="option"
       onClick={() => {
         handleClick(label.shipmentId);
       }}
@@ -110,9 +103,41 @@ LabelProps) => {
             label.carrierCode
           )}/icon.svg`}
         />
-        <div>{getServiceCodeFriendlyName(label.serviceCode)}</div>
-        <div>${label.shipmentCost.amount}</div>
-        <div>{label.shipDate}</div>
+
+        <div>
+          <div
+            css={{
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {getServiceCodeFriendlyName(label.serviceCode)}
+          </div>
+          <div
+            css={{ display: "flex", cursor: "pointer" }}
+            onClick={() => {
+              copy(label.trackingNumber);
+            }}
+          >
+            <div
+              css={{
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                width: "112px",
+                fontWeight: "normal",
+              }}
+            >
+              {label.trackingNumber}
+            </div>
+            <Icon name={IconNames.COPY} size={IconSize.SIZE_SMALL}></Icon>
+          </div>
+        </div>
+
+        <div>{formatDate(label.shipDate)}</div>
+
+        <div>${totalCost}</div>
       </section>
     </article>
   );

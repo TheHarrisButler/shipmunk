@@ -2,27 +2,31 @@ import { createStyles } from "../../utils";
 
 export const styles = createStyles({
   article: {
-    ":hover": { backgroundColor: "rgba(159, 90, 253, 0.2)", cursor: "pointer" },
-    border: "1px solid rgba(159, 90, 253, 0.6)",
-    borderRadius: "4px",
+    ":hover": { backgroundColor: "rgba(159, 90, 253, 0.2)", cursor: "default" },
     // Set to full width of content modal
-    minWidth: "440px",
+    width: "440px",
     height: "80px",
-    // position: "relative",
+    backgroundColor: "rgba(159, 90, 253, 0.1)",
+    marginBottom: "1px",
   },
 
   section: {
-    padding: "0 20px",
-    height: "100%",
+    padding: "0 10px",
+    display: "grid",
+    // super hard coded, but container will always be same size so works for now
+    gridTemplateColumns: "40px 200px 100px 60px",
     alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    // flexWrap: "nowrap",
+    gridGap: "10px",
+    height: "100%",
+    fontWeight: "bold",
   },
 
   image: {
     maxHeight: "40px",
     maxWidth: "40px",
+  },
+
+  hr: {
+    color: "rgba(159, 90, 253, 0.6)",
   },
 });

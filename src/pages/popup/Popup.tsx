@@ -8,6 +8,7 @@ import {
   ElementList,
   ElementListValue,
   Shipmunk,
+  LabelsGrid,
 } from "@src/components";
 
 export default function Popup(): JSX.Element {
@@ -114,7 +115,10 @@ export default function Popup(): JSX.Element {
               </Button>
             </div>
           )}
-          <div>{/** TODO: Add labels grid here */}</div>
+          <div>
+            {/** TODO: Add labels grid here */}
+            <LabelsGrid setSelectedLabel={updateSelectedLabel} />
+          </div>
         </div>
       </RootPortalProvider>
     </AlchemyProvider>
