@@ -6,6 +6,7 @@ import { createStyles } from "../../utils";
 import { keyframes } from "@emotion/react";
 
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
+import { noop } from "lodash";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +38,8 @@ export const Content = () => {
 
     return token;
   };
+
+  const handleWizardSubmit = useCallback(() => noop, []);
 
   const toggleIsElementOpen = useCallback(
     () => setIsOpen((isOpen) => !isOpen),
@@ -142,7 +145,7 @@ export const Content = () => {
                 </div>
                 <div css={styles.elementContainer}>
                   {displayWizard ? (
-                    <WizardUI />
+                    <WizardUI handleSubmit={handleWizardSubmit} />
                   ) : (
                     <PurchaseLabel.Element
                       features={{

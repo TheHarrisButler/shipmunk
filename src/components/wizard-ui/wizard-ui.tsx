@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const WizardUI = () => {
+export const WizardUI = ({ handleSubmit }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
