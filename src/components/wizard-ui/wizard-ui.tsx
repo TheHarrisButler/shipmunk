@@ -17,7 +17,7 @@ export const WizardUI = ({ handleSubmit }) => {
 
   return (
     <div>
-      <h1>Wizard UI</h1>
+      <h1>Welcome to the Label Wizard UI</h1>
       <form
         onSubmit={(event) => {
           handleSubmit();
