@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 
 export const WizardUI = ({ handleSubmit }) => {
-  const [clickedText, setClickedText] = useState("");
+  const [selectedText, setSelectedText] = useState("");
   const [step, setStep] = useState(1);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const handleClick = (event) => {
-      const clickedElement = event.target;
-      const text = clickedElement.textContent || clickedElement.innerText;
+    const handleSelection = (event) => {
+      // const clickedElement = event.target;
+      // const text = clickedElement.textContent || clickedElement.innerText;
+      const text = document.getSelection()?.toString();
 
-      setClickedText(text);
+      setSelectedText(text);
     };
-    document.addEventListener("click", handleClick);
-    () => document.removeEventListener("click", handleClick);
+    document.addEventListener("selectionchange", handleSelection);
+    () => document.removeEventListener("selectionchange", handleSelection);
   }, []);
 
   const nextHandler = (stepData) => {
@@ -37,9 +38,9 @@ export const WizardUI = ({ handleSubmit }) => {
       <form onSubmit={submitHandler}>
         {
           {
-            1: <StepOne next={nextHandler} selectedText={clickedText} />,
-            2: <StepTwo next={nextHandler} selectedText={clickedText} />,
-            3: <StepThree next={nextHandler} selectedText={clickedText} />,
+            1: <StepOne next={nextHandler} selectedText={selectedText} />,
+            2: <StepTwo next={nextHandler} selectedText={selectedText} />,
+            3: <StepThree next={nextHandler} selectedText={selectedText} />,
           }[step]
         }
         <button type="submit">
