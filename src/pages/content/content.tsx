@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { Shipmunk } from "../../components";
+import { LabelsGrid, Shipmunk } from "../../components";
 import { AlchemyProvider } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { createStyles } from "../../utils";
@@ -19,12 +19,38 @@ import { noop } from "lodash";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [displayWizard, setDisplayWizard] = useState(false); // default should be for this to be the landing, use state for development
   const [textSelection, setTextSelection] = useState("");
+
+  type NavigationKey = "wizard" | "history" | "purchase";
+  const [navigationKey, setNavigationKey] = useState<NavigationKey>("wizard");
+
+  const getCurrentNavigation = (navigatorKey: string) => {
+    switch (navigatorKey) {
+      case "wizard":
+        return <WizardUI handleSubmit={handleWizardSubmit} />;
+      case "purchase":
+        return (
+          <PurchaseLabel.Element
+            features={{
+              presentation: { poweredByShipEngine: true },
+              rateForm: { enableFunding: true },
+            }}
+            onLabelCreateSuccess={() => {
+              // TODO
+            }}
+            printLabelLayout={
+              "letter" // : '4x6'
+            }
+          />
+        );
+      case "history":
+        return <LabelsGrid />;
+    }
+  };
 
   // handle text selection
   useEffect(() => {
-    const handleTextSelect = (event) => {
+    const handleTextSelect = () => {
       const selectedText = window.getSelection()?.toString() ?? "";
 
       if (selectedText?.length) {
@@ -64,55 +90,55 @@ export const Content = () => {
   }
   `;
 
-  const getStyles = (theme: Theme) => createStyles({
-    contentContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      input: {
-        backgroundColor: theme.getCardStyle().backgroundColor,
-      }
-    },
-    overflowContainer: {
-      borderRadius: "10px",
-      border: "1px solid #3498db",
-      width: "480px",
-      overflow: "hidden",
-      backgroundColor: "#fff",
-      transform: `translateY(${isOpen ? "0" : "100%"})`,
-      animation: `${slideIn} 0.3s ease-out forwards`,
-    },
-    elementContainer: {
-      display: "flex",
-      height: "700px",
-      overflowY: "auto",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    pillButton: {
-      display: "inline-block",
-      padding: "10px 20px",
-      borderRadius: "30px",
-      backgroundColor: "#3498db",
-      color: "white",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      textAlign: "center",
-      textDecoration: "none",
-      cursor: "pointer",
-      border: "none",
-      outline: "none",
-    },
-    header: {
-      display: "flex",
-      alignItems: "center",
-      borderBottom: "1px solid rgb(222, 222, 222)",
-      padding: "4px 4px 4px 14px",
-      justifyContent: "space-between",
-    },
-  });
+  const getStyles = (theme: Theme) =>
+    createStyles({
+      contentContainer: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        input: {
+          backgroundColor: theme.getCardStyle().backgroundColor,
+        },
+      },
+      overflowContainer: {
+        borderRadius: "10px",
+        border: "1px solid #3498db",
+        width: "480px",
+        overflow: "hidden",
+        backgroundColor: "#fff",
+        transform: `translateY(${isOpen ? "0" : "100%"})`,
+        animation: `${slideIn} 0.3s ease-out forwards`,
+      },
+      elementContainer: {
+        display: "flex",
+        height: "700px",
+        overflowY: "auto",
+        flexDirection: "column",
+        alignItems: "center",
+      },
+      pillButton: {
+        display: "inline-block",
+        padding: "10px 20px",
+        borderRadius: "30px",
+        backgroundColor: "#3498db",
+        color: "white",
+        fontSize: "1rem",
+        fontWeight: "bold",
+        textAlign: "center",
+        textDecoration: "none",
+        cursor: "pointer",
+        border: "none",
+        outline: "none",
+      },
+      header: {
+        display: "flex",
+        alignItems: "center",
+        borderBottom: "1px solid rgb(222, 222, 222)",
+        padding: "4px 4px 4px 14px",
+        justifyContent: "space-between",
+      },
+    });
 
   return (
     <div
@@ -131,10 +157,10 @@ export const Content = () => {
         getToken={getToken}
       >
         <RootPortalProvider>
-          <div css={theme => getStyles(theme).contentContainer}>
+          <div css={(theme) => getStyles(theme).contentContainer}>
             {isOpen && (
-              <div css={theme => getStyles(theme).overflowContainer}>
-                <div css={theme => getStyles(theme).header}>
+              <div css={(theme) => getStyles(theme).overflowContainer}>
+                <div css={(theme) => getStyles(theme).header}>
                   <div
                     css={{
                       width: "30px",
@@ -149,36 +175,26 @@ export const Content = () => {
                       alignItems: "center",
                     }}
                   >
-                    <button onClick={() => setDisplayWizard(true)}>
+                    <button onClick={() => setNavigationKey("wizard")}>
                       Label Wizard
                     </button>
-                    <button>Label History</button>
+                    <button onClick={() => setNavigationKey("history")}>
+                      Label History
+                    </button>
+                    <button onClick={() => setNavigationKey("purchase")}>
+                      Purchase Label
+                    </button>
                     <button onClick={toggleIsElementOpen}>X</button>
                   </div>
                 </div>
-                <div css={theme => getStyles(theme).elementContainer}>
-                  {displayWizard ? (
-                    <WizardUI handleSubmit={handleWizardSubmit} />
-                  ) : (
-                    <PurchaseLabel.Element
-                      features={{
-                        presentation: { poweredByShipEngine: true },
-                        rateForm: { enableFunding: true },
-                      }}
-                      onLabelCreateSuccess={() => {
-                        // TODO
-                      }}
-                      printLabelLayout={
-                        "letter" // : '4x6'
-                      }
-                    />
-                  )}
+                <div css={(theme) => getStyles(theme).elementContainer}>
+                  {getCurrentNavigation(navigationKey)}
                 </div>
               </div>
             )}
             {!isOpen && (
               <button
-                css={theme => getStyles(theme).pillButton}
+                css={(theme) => getStyles(theme).pillButton}
                 onClick={() => toggleIsElementOpen()}
               >
                 <div
