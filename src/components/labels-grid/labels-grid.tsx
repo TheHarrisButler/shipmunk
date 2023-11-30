@@ -33,7 +33,12 @@ export const LabelsGrid = () => {
               Return to Labels
             </button>
           </div>
-          <ViewShipment.Element shipmentId={label || ""} />
+          <ViewShipment.Element
+            features={{
+              presentation: { poweredByShipEngine: true },
+            }}
+            shipmentId={label || ""}
+          />
         </>
       ) : (
         <section css={{ width: "100%" }}>

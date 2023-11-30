@@ -23,7 +23,7 @@ export const styles = createStyles({
   },
 
   image: {
-    maxHeight: "40px",
-    maxWidth: "40px",
+    maxHeight: "30px",
+    maxWidth: "30px",
   },
 });
