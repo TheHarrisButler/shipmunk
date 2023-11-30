@@ -1,12 +1,42 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Shipmunk } from "../../components";
 import { AlchemyProvider } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { createStyles } from "../../utils";
-import { keyframes } from "@emotion/react";
+import { keyframes, Theme } from "@emotion/react";
+
+// dirty monkeypatch giger theme into emotion theme
+declare module "@emotion/react" {
+  export interface Theme {
+    getCardStyle: () => {
+      backgroundColor: string;
+    };
+  }
+}
+
+import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
+import { noop } from "lodash";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [displayWizard, setDisplayWizard] = useState(false); // default should be for this to be the landing, use state for development
+  const [textSelection, setTextSelection] = useState("");
+
+  // handle text selection
+  useEffect(() => {
+    const handleTextSelect = (event) => {
+      const selectedText = window.getSelection()?.toString() ?? "";
+
+      if (selectedText?.length) {
+        setTextSelection(selectedText);
+        // automatically open the menu if its not open yet
+        if (!isOpen) setIsOpen(true);
+      }
+    };
+    document.addEventListener("mouseup", handleTextSelect);
+
+    return () => document.removeEventListener("mouseup", handleTextSelect);
+  }, []);
 
   const getToken = async () => {
     const response = await fetch(`http://localhost:3002/generate-token`, {
@@ -17,6 +47,8 @@ export const Content = () => {
 
     return token;
   };
+
+  const handleWizardSubmit = useCallback(() => noop, []);
 
   const toggleIsElementOpen = useCallback(
     () => setIsOpen((isOpen) => !isOpen),
@@ -32,12 +64,15 @@ export const Content = () => {
   }
   `;
 
-  const styles = createStyles({
+  const getStyles = (theme: Theme) => createStyles({
     contentContainer: {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
+      input: {
+        backgroundColor: theme.getCardStyle().backgroundColor,
+      }
     },
     overflowContainer: {
       borderRadius: "10px",
@@ -82,6 +117,7 @@ export const Content = () => {
   return (
     <div
       css={{
+        zIndex: 9999,
         position: "fixed",
         bottom: "50px",
         right: "45px",
@@ -95,10 +131,10 @@ export const Content = () => {
         getToken={getToken}
       >
         <RootPortalProvider>
-          <div css={styles.contentContainer}>
+          <div css={theme => getStyles(theme).contentContainer}>
             {isOpen && (
-              <div css={styles.overflowContainer}>
-                <div css={styles.header}>
+              <div css={theme => getStyles(theme).overflowContainer}>
+                <div css={theme => getStyles(theme).header}>
                   <div
                     css={{
                       width: "30px",
@@ -113,30 +149,36 @@ export const Content = () => {
                       alignItems: "center",
                     }}
                   >
-                    <button>Label Wizard</button>
+                    <button onClick={() => setDisplayWizard(true)}>
+                      Label Wizard
+                    </button>
                     <button>Label History</button>
                     <button onClick={toggleIsElementOpen}>X</button>
                   </div>
                 </div>
-                <div css={styles.elementContainer}>
-                  <PurchaseLabel.Element
-                    features={{
-                      presentation: { poweredByShipEngine: true },
-                      rateForm: { enableFunding: true },
-                    }}
-                    onLabelCreateSuccess={() => {
-                      // TODO
-                    }}
-                    printLabelLayout={
-                      "letter" // : '4x6'
-                    }
-                  />
+                <div css={theme => getStyles(theme).elementContainer}>
+                  {displayWizard ? (
+                    <WizardUI handleSubmit={handleWizardSubmit} />
+                  ) : (
+                    <PurchaseLabel.Element
+                      features={{
+                        presentation: { poweredByShipEngine: true },
+                        rateForm: { enableFunding: true },
+                      }}
+                      onLabelCreateSuccess={() => {
+                        // TODO
+                      }}
+                      printLabelLayout={
+                        "letter" // : '4x6'
+                      }
+                    />
+                  )}
                 </div>
               </div>
             )}
             {!isOpen && (
               <button
-                css={styles.pillButton}
+                css={theme => getStyles(theme).pillButton}
                 onClick={() => toggleIsElementOpen()}
               >
                 <div

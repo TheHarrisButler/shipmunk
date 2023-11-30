@@ -2,15 +2,12 @@
   "manifest_version": 3,
   "name": "Shipmunk_beta",
   "version": "0.0.1",
-  "options_ui": {
-    "page": "src/pages/options/index.html"
-  },
+  "options_page": "src/pages/options/index.html",
   "background": {
     "service_worker": "src/pages/background/index.ts",
     "type": "module"
   },
   "action": {
-    "default_popup": "src/pages/popup/index.html",
     "default_icon": {
       "32": "icon-32.png"
     }
