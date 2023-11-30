@@ -2,11 +2,11 @@ import { createStyles } from "../../utils";
 
 export const styles = createStyles({
   article: {
-    ":hover": { backgroundColor: "rgba(159, 90, 253, 0.2)", cursor: "default" },
+    ":hover": { backgroundColor: "rgba(30, 154, 255, 0.2)", cursor: "default" },
     // Set to full width of content modal
-    width: "440px",
+    width: "480px",
     height: "80px",
-    backgroundColor: "rgba(159, 90, 253, 0.1)",
+    backgroundColor: "rgba(30, 154, 255, 0.1)",
     marginBottom: "1px",
   },
 
@@ -19,14 +19,11 @@ export const styles = createStyles({
     gridGap: "10px",
     height: "100%",
     fontWeight: "bold",
+    fontSize: "14px",
   },
 
   image: {
     maxHeight: "40px",
     maxWidth: "40px",
-  },
-
-  hr: {
-    color: "rgba(159, 90, 253, 0.6)",
   },
 });

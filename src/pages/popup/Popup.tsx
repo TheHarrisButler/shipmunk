@@ -17,8 +17,6 @@ export default function Popup(): JSX.Element {
 
   const [isElementOpen, setIsElementOpen] = useState<boolean>(false);
 
-  //const [selectedLabelID, setSelectedLabelID] = useState<string | undefined>();
-
   const toggleIsElementOpen = useCallback(
     () => setIsElementOpen((isElementOpen) => !isElementOpen),
     []
@@ -33,14 +31,6 @@ export default function Popup(): JSX.Element {
 
     return token;
   };
-
-  const [selectedLabel, setSelectedLabel] = useState<null | string>(null);
-
-  const updateSelectedLabel = (shipmentId: string) => {
-    setSelectedLabel(shipmentId);
-  };
-
-  console.log("selected label", selectedLabel);
 
   const styles = createStyles({
     container: {
@@ -116,8 +106,7 @@ export default function Popup(): JSX.Element {
             </div>
           )}
           <div>
-            {/** TODO: Add labels grid here */}
-            <LabelsGrid setSelectedLabel={updateSelectedLabel} />
+            <LabelsGrid />
           </div>
         </div>
       </RootPortalProvider>

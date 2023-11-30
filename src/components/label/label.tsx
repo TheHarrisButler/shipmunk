@@ -9,11 +9,6 @@ export type LabelProps = {
   handleClick: (shipmentId: string) => void;
 };
 
-// TODO: OnClick: open ViewShipment
-// TODO: ViewShipment Slide in from right
-// TODO: Close ViewShipment Button
-// TODO: Clear Shipment State on Close
-
 export const Label = ({ label, handleClick }: LabelProps) => {
   const carrierCodeOverrides = {
     stamps_com: "stamps_com_wl",
@@ -27,6 +22,7 @@ export const Label = ({ label, handleClick }: LabelProps) => {
     );
   };
 
+  //    TODO: Clean up and add UPS, FedEx, DHL, etc.
   const serviceCodeOverrides = {
     usps_first_class_mail: "First Class Mail",
     usps_priority_mail: "Priority Mail",
@@ -116,7 +112,8 @@ export const Label = ({ label, handleClick }: LabelProps) => {
           </div>
           <div
             css={{ display: "flex", cursor: "pointer" }}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               copy(label.trackingNumber);
             }}
           >

@@ -1,24 +1,45 @@
 import { useListLabels } from "@shipengine/alchemy";
 import { Label } from "../label/label";
-// import { PurchaseLabel, ViewShipment } from "@shipengine/elements";
-export type LabelsGridProps = {
-  setSelectedLabel: (shipmentId: string) => void;
-};
+import { useCallback, useState } from "react";
+import { ViewShipment } from "@shipengine/elements";
+import { styles } from "./labels-grid.styles";
 
-export const LabelsGrid = ({ setSelectedLabel }: LabelsGridProps) => {
+export const LabelsGrid = () => {
   const { data: labels, isLoading: labelsLoading } = useListLabels();
 
-  console.log(labels, labelsLoading);
+  const [label, setLabel] = useState<null | string>(null);
+  const [showViewShipment, setShowViewShipment] = useState(false);
+
+  const updateLabel = useCallback(
+    (labelId: string) => {
+      setLabel(labelId);
+      setShowViewShipment(true);
+    },
+    [label]
+  );
 
   if (labelsLoading) return <div>Loading...</div>;
+  // TODO: Display if no labels
 
   return (
     <div>
-      {labels && (
-        <section css={{ width: "100%" }} >
-          {labels.map((label) => (
+      {showViewShipment ? (
+        <>
+          <div css={{ display: "flex", justifyContent: "center" }}>
+            <button
+              css={styles.returnToLabels}
+              onClick={() => setShowViewShipment(false)}
+            >
+              Return to Labels
+            </button>
+          </div>
+          <ViewShipment.Element shipmentId={label || ""} />
+        </>
+      ) : (
+        <section css={{ width: "100%" }}>
+          {labels?.map((label) => (
             <Label
-              handleClick={setSelectedLabel}
+              handleClick={updateLabel}
               key={label.labelId}
               label={label}
             />

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Label, LabelsGrid, Shipmunk } from "../../components";
+import { Shipmunk } from "../../components";
 import { AlchemyProvider } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { createStyles } from "../../utils";
@@ -7,12 +7,6 @@ import { keyframes } from "@emotion/react";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showLabelGrid, setShowLabelGrid] = useState(false);
-  const [selectedLabel, setSelectedLabel] = useState<null | string>(null);
-
-  const updateSelectedLabel = (shipmentId: string) => {
-    setSelectedLabel(shipmentId);
-  };
 
   const getToken = async () => {
     const response = await fetch(`http://localhost:3002/generate-token`, {
@@ -26,11 +20,6 @@ export const Content = () => {
 
   const toggleIsElementOpen = useCallback(
     () => setIsOpen((isOpen) => !isOpen),
-    []
-  );
-
-  const toggleShowLabelGrid = useCallback(
-    () => setShowLabelGrid((showLabelGrid) => !showLabelGrid),
     []
   );
 
@@ -125,13 +114,10 @@ export const Content = () => {
                     }}
                   >
                     <button>Label Wizard</button>
-                    <button onClick={toggleShowLabelGrid}>Label History</button>
+                    <button>Label History</button>
                     <button onClick={toggleIsElementOpen}>X</button>
                   </div>
                 </div>
-                {showLabelGrid && (
-                  <LabelsGrid setSelectedLabel={updateSelectedLabel} />
-                )}
                 <div css={styles.elementContainer}>
                   <PurchaseLabel.Element
                     features={{
