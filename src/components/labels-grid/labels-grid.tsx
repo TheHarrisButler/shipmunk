@@ -1,22 +1,32 @@
-import { useListLabels } from "@shipengine/alchemy";
+import { SE, useListLabels } from "@shipengine/alchemy";
 import { Label } from "../label/label";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ViewShipment } from "@shipengine/elements";
 import { styles } from "./labels-grid.styles";
 
-export const LabelsGrid = () => {
+export type LabelsGridProps = {
+  purchasedLabel: null | SE.Label;
+};
+
+export const LabelsGrid = ({ purchasedLabel }: LabelsGridProps) => {
   const { data: labels, isLoading: labelsLoading } = useListLabels();
 
-  const [label, setLabel] = useState<null | string>(null);
+  const [shipmentId, setShipmentId] = useState<null | string>(null);
   const [showViewShipment, setShowViewShipment] = useState(false);
 
-  const updateLabel = useCallback(
-    (labelId: string) => {
-      setLabel(labelId);
+  const updateSelectedLabel = useCallback(
+    (shipmentId: string) => {
+      setShipmentId(shipmentId);
       setShowViewShipment(true);
     },
-    [label]
+    [shipmentId]
   );
+
+  useEffect(() => {
+    if (purchasedLabel) {
+      updateSelectedLabel(purchasedLabel.shipmentId);
+    }
+  }, [purchasedLabel]);
 
   if (labelsLoading) return <div>Loading...</div>;
   if (!labels?.length)
@@ -25,7 +35,7 @@ export const LabelsGrid = () => {
     );
 
   return (
-    <div>
+    <div css={{ flexBasis: '100%', height: '100%', width: '100%', position: 'relative' }}>
       {showViewShipment ? (
         <>
           <div css={{ display: "flex", justifyContent: "center" }}>
@@ -40,14 +50,14 @@ export const LabelsGrid = () => {
             features={{
               presentation: { poweredByShipEngine: true },
             }}
-            shipmentId={label || ""}
+            shipmentId={shipmentId || ""}
           />
         </>
       ) : (
         <section css={{ width: "100%" }}>
           {labels?.map((label) => (
             <Label
-              handleClick={updateLabel}
+              handleClick={updateSelectedLabel}
               key={label.labelId}
               label={label}
             />
