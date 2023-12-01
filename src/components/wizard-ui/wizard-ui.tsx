@@ -97,12 +97,13 @@ const StepConfirmAddressFrom = ({ next, selectedText = "" }) => {
 
   return (
     <div>
-      <h2>This is the address you&lsquo;re shipping from is this correct?</h2>
       {isLoading ? (
         <p>Loading your shipping address</p>
       ) : (
         <div>
+          <h2>This is the address you&lsquo;re shipping from</h2>
           <AddressDisplay address={warehouses[0].originAddress} />
+          <h3>is this correct?</h3>
           <input
             type="text"
             name="stepone"
@@ -113,6 +114,9 @@ const StepConfirmAddressFrom = ({ next, selectedText = "" }) => {
           />
         </div>
       )}
+      <button type="button" onClick={() => console.log("edit")}>
+        No
+      </button>
       <button type="button" onClick={() => next(inputData)}>
         Next
       </button>
