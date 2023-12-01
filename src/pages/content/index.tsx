@@ -1,23 +1,46 @@
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom";
+import retargetEvents from "react-shadow-dom-retarget-events";
 import { Content } from "./content";
 
-const div = document.createElement("div");
-div.id = "__root";
-document.body.appendChild(div);
+export default class ShipmunkExtension extends HTMLElement {
+  static get observedAttributes() {
+    return ["title"];
+  }
 
-const rootContainer = document.querySelector("#__root");
-if (!rootContainer) throw new Error("Can't find Options root element");
-const root = createRoot(rootContainer);
+  mountPoint: HTMLSpanElement;
+  title: string;
 
-// constanct comms for selected text
+  createContent(title: string) {
+    return React.createElement(Content, { title }, React.createElement("slot"));
+  }
+
+  connectedCallback() {
+    this.mountPoint = document.createElement("div");
+    const shadowRoot = this.attachShadow({ mode: "open" });
+    shadowRoot.appendChild(this.mountPoint);
+
+    const title = this.getAttribute("title");
+    ReactDOM.render(this.createContent(title as string), this.mountPoint);
+    retargetEvents(shadowRoot);
+  }
+
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (name === "title") {
+      ReactDOM.render(this.createContent(newValue), this.mountPoint);
+    }
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  customElements.define("shipmunk-root", ShipmunkExtension);
+
+  const shipmunkRoot = document.createElement("shipmunk-root");
+  document.body.appendChild(shipmunkRoot);
+});
 
 try {
   console.log("content script loaded");
-
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    // if the user clicked on the extension icon display the bottom left button
-    if (request.active) root.render(<Content />);
-  });
 } catch (e) {
   console.error(e);
 }
