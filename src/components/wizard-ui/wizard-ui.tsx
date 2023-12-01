@@ -260,26 +260,36 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
 };
 
 const StepProvideWeight = ({ next, selectedText = "" }) => {
-  const [inputData, setInputData] = useState("");
+  const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
       setInputData(selectedText);
     }
   }, [selectedText]);
 
-  const handleChange = (event) => setInputData(event.target.value);
+  const handleChange = (name, value) =>
+    setInputData({ ...inputData, [name]: value });
 
   return (
     <div>
       <h2>Select Weight</h2>
       <input
         type="text"
-        name="stepfour"
-        id="stepfour"
-        placeholder="Input Step Four"
-        value={inputData}
-        onChange={handleChange}
+        name="weight-pounds"
+        id="weight-pounds"
+        placeholder="Provide Weight in Pounds"
+        value={inputData["weight-pounds"]}
+        onChange={(event) => handleChange("weight-pounds", event.target.value)}
       />
+      <input
+        type="text"
+        name="weight-ounces"
+        id="weight-ounces"
+        placeholder="Provide Weight in Ounces"
+        value={inputData["weight-ounces"]}
+        onChange={(event) => handleChange("weight-ounces", event.target.value)}
+      />
+
       <button type="button" onClick={() => next(inputData)}>
         Next
       </button>
