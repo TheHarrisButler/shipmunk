@@ -1,9 +1,11 @@
-import {useState, useCallback, useEffect} from "react";
+import {useState, useCallback, useEffect, useMemo} from "react";
 import {Shipmunk} from "../../components";
 import {AlchemyProvider} from "@shipengine/alchemy";
 import {RootPortalProvider, PurchaseLabel} from "@shipengine/elements";
 import {createStyles} from "../../utils";
 import {keyframes, Theme} from "@emotion/react";
+import createCache from '@emotion/cache';
+import {CacheProvider} from '@emotion/react';
 
 // dirty monkeypatch giger theme into emotion theme
 declare module "@emotion/react" {
@@ -17,7 +19,7 @@ declare module "@emotion/react" {
 import {WizardUI} from "@src/components/wizard-ui/wizard-ui";
 import {noop} from "lodash";
 
-export const Content = () => {
+export const Content = ({container}: { container: ShadowRoot }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [displayWizard, setDisplayWizard] = useState(false); // default should be for this to be the landing, use state for development
   const [textSelection, setTextSelection] = useState("");
@@ -66,6 +68,10 @@ export const Content = () => {
 
   const getStyles = (theme: Theme) => createStyles({
     contentContainer: {
+      zIndex: 999,
+      position: 'fixed',
+      bottom: "50px",
+      right: "45px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -114,88 +120,98 @@ export const Content = () => {
     },
   });
 
+  const cache = useMemo(() => {
+    return createCache({
+      key:'sM',
+      container,
+      prepend: true
+    });
+  }, [container]);
+
   return (
-    <AlchemyProvider
-      baseURL={"https://elements-staging.shipengine.com"}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      brandName={"paypal_shipcenter" as any}
-      cdnURL="https://cdn.packlink.com"
-      getToken={getToken}
-    >
-      <RootPortalProvider>
-        <div css={theme => getStyles(theme).contentContainer}>
-          {isOpen && (
-            <div css={theme => getStyles(theme).overflowContainer}>
-              <div css={theme => getStyles(theme).header}>
-                <div
-                  css={{
-                    width: "30px",
-                    height: "30px",
-                  }}
-                >
-                  <Shipmunk/>
+    <CacheProvider value={cache}>
+      <AlchemyProvider
+        baseURL={"https://elements-staging.shipengine.com"}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        brandName={"paypal_shipcenter" as any}
+        cdnURL="https://cdn.packlink.com"
+        getToken={getToken}
+      >
+        <RootPortalProvider>
+          <div css={theme => getStyles(theme).contentContainer}>
+            {isOpen && (
+              <div css={theme => getStyles(theme).overflowContainer}>
+                <div css={theme => getStyles(theme).header}>
+                  <div
+                    css={{
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  >
+                    <Shipmunk/>
+                  </div>
+                  <div
+                    css={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <button onClick={() => setDisplayWizard(true)}>
+                      Label Wizard
+                    </button>
+                    <button>Label History</button>
+                    <button onClick={toggleIsElementOpen}>X</button>
+                  </div>
                 </div>
-                <div
-                  css={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <button onClick={() => setDisplayWizard(true)}>
-                    Label Wizard
-                  </button>
-                  <button>Label History</button>
-                  <button onClick={toggleIsElementOpen}>X</button>
+                <div css={theme => getStyles(theme).elementContainer}>
+                  {displayWizard ? (
+                    <WizardUI handleSubmit={handleWizardSubmit}/>
+                  ) : (
+                    <PurchaseLabel.Element
+                      features={{
+                        presentation: {poweredByShipEngine: true},
+                        rateForm: {enableFunding: true},
+                      }}
+                      onLabelCreateSuccess={() => {
+                        // TODO
+                      }}
+                      printLabelLayout={
+                        "letter" // : '4x6'
+                      }
+                    />
+                  )}
                 </div>
               </div>
-              <div css={theme => getStyles(theme).elementContainer}>
-                {displayWizard ? (
-                  <WizardUI handleSubmit={handleWizardSubmit}/>
-                ) : (
-                  <PurchaseLabel.Element
-                    features={{
-                      presentation: {poweredByShipEngine: true},
-                      rateForm: {enableFunding: true},
-                    }}
-                    onLabelCreateSuccess={() => {
-                      // TODO
-                    }}
-                    printLabelLayout={
-                      "letter" // : '4x6'
-                    }
-                  />
-                )}
-              </div>
-            </div>
-          )}
-          {!isOpen && (
-            <button
-              css={theme => getStyles(theme).pillButton}
-              onClick={() => toggleIsElementOpen()}
-            >
-              <div
-                css={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+            )}
+            {!isOpen && (
+              <button
+                css={theme => getStyles(theme).pillButton}
+                onClick={() => toggleIsElementOpen()}
               >
                 <div
                   css={{
-                    cursor: "pointer",
-                    width: "50px",
-                    height: "50px",
-                    paddingRight: "1rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  <Shipmunk/>
+                  <div
+                    css={{
+                      cursor: "pointer",
+                      width: "50px",
+                      height: "50px",
+                      paddingRight: "1rem",
+                    }}
+                  >
+                    <Shipmunk/>
+                  </div>
+                  <span>Get Shipping labels</span>
                 </div>
-                <span>Get Shipping labels</span>
-              </div>
-            </button>
-          )}
-        </div>
-      </RootPortalProvider>
-    </AlchemyProvider>
+              </button>
+            )}
+          </div>
+        </RootPortalProvider>
+      </AlchemyProvider>
+    </CacheProvider>
   );
 };
