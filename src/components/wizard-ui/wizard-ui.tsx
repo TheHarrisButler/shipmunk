@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-
 import { useListWarehouses } from "@shipengine/alchemy";
+
+import { AddressDisplay } from "@src/components/address-display/address-display";
 import { useGetOrCreateShipment } from "./hooks/use-get-or-create-shipment";
 
 export const WizardUI = ({ handleSubmit }) => {
@@ -101,6 +102,7 @@ const StepConfirmAddressFrom = ({ next, selectedText = "" }) => {
         <p>Loading your shipping address</p>
       ) : (
         <div>
+          <AddressDisplay address={warehouses[0].originAddress} />
           <input
             type="text"
             name="stepone"
