@@ -2351,6 +2351,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-shadow-dom-retarget-events@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@types/react-shadow-dom-retarget-events@npm:1.0.2"
+  checksum: e8feb80d26b75907da447e083129e0ff6061bf16050a5e51868ff2f36249c695db89ec26e3102199327efbbf3e298319cf0a3e7afe3d05211513d61628910d96
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:18.2.0":
   version: 18.2.0
   resolution: "@types/react@npm:18.2.0"
@@ -7311,6 +7318,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-shadow-dom-retarget-events@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "react-shadow-dom-retarget-events@npm:1.1.0"
+  checksum: 8af3cf0c7a1517b70db2b7899942ad45cd3157cf5788788c2464d6180f2c68ca73d8c8fe00f107b85857dad0abf2f244100cb69f1032be19b3e1f63d82c4c10f
+  languageName: node
+  linkType: hard
+
 "react-universal-interface@npm:^0.6.2":
   version: 0.6.2
   resolution: "react-universal-interface@npm:0.6.2"
@@ -7783,6 +7797,7 @@ __metadata:
     "@types/node": ^18.11.18
     "@types/react": ^18.0.27
     "@types/react-dom": ^18.0.10
+    "@types/react-shadow-dom-retarget-events": ^1.0.2
     "@types/webextension-polyfill": ^0.10.0
     "@typescript-eslint/eslint-plugin": ^5.49.0
     "@typescript-eslint/parser": ^5.49.0
@@ -7808,6 +7823,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-i18next: ^13.5.0
+    react-shadow-dom-retarget-events: ^1.1.0
     tailwindcss: ^3.2.4
     ts-node: ^10.9.1
     typescript: ^4.9.4

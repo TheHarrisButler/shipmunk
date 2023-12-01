@@ -19,15 +19,20 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-      "js": ["src/pages/content/index.tsx"],
+      "js": ["src/pages/contentScriptLoader.ts"],
       "css": ["contentStyle.css"]
+    },
+    {
+      "world": "MAIN",
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "js": ["src/pages/content/index.tsx"]
     }
   ],
   "devtools_page": "src/pages/devtools/index.html",
   "web_accessible_resources": [
     {
-      "resources": ["contentStyle.css", "icon-128.png", "icon-32.png"],
-      "matches": []
+      "resources": ["contentStyle.css", "icon-128.png", "icon-32.png", "src/pages/content/index.tsx"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
