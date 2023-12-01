@@ -40,6 +40,8 @@ export const WizardUI = ({ handleSubmit }) => {
     event.preventDefault();
 
     const addressData = data[1];
+    const dimensionData = data[2];
+    const weightData = data[3];
 
     const updatedShipment = await updateShipment({
       ...shipment,
@@ -51,6 +53,21 @@ export const WizardUI = ({ handleSubmit }) => {
         cityLocality: addressData["shipto-city"],
         countryCode: addressData["shipto-country"],
       },
+      packages: [
+        {
+          dimensions: {
+            height: dimensionData["dimensions-height"],
+            length: dimensionData["dimensions-length"],
+            width: dimensionData["dimensions-width"],
+            unit: "inch",
+          },
+          weight: {
+            value:
+              weightData["weight-pounds"] * 16 + weightData["weight-ounces"],
+            unit: "ounce",
+          },
+        },
+      ],
     });
 
     handleSubmit(updatedShipment);
