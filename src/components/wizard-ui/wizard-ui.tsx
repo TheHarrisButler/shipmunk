@@ -135,25 +135,71 @@ const StepConfirmAddressFrom = ({
 };
 
 const StepProvideAddressTo = ({ next, selectedText = "" }) => {
-  const [inputData, setInputData] = useState("");
+  const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
       setInputData(selectedText);
     }
   }, [selectedText]);
 
-  const handleChange = (event) => setInputData(event.target.value);
+  const handleChange = (name, value) =>
+    setInputData({ ...inputData, [name]: value });
 
   return (
     <div>
       <h2>Select address to ship to</h2>
+      Name Country Address Line City State Postal Code
       <input
         type="text"
-        name="steptwo"
-        id="steptwo"
-        placeholder="Input Step Two"
-        value={inputData}
-        onChange={handleChange}
+        name="shipto-name"
+        id="shipto-name"
+        placeholder="Provide Name"
+        value={inputData["shipto-name"]}
+        onChange={(event) => handleChange("shipto-name", event.target.value)}
+      />
+      <input
+        type="text"
+        name="shipto-country"
+        id="shipto-country"
+        placeholder="Provide the country"
+        value={inputData["shipto-countrty"]}
+        onChange={(event) =>
+          handleChange("shipto-countrty", event.target.value)
+        }
+      />
+      <input
+        type="text"
+        name="shipto-address"
+        id="shipto-address"
+        placeholder="Provide the Address"
+        value={inputData["shipto-address"]}
+        onChange={(event) => handleChange("shipto-address", event.target.value)}
+      />
+      <input
+        type="text"
+        name="shipto-city"
+        id="shipto-city"
+        placeholder="Provide the City"
+        value={inputData["shipto-city"]}
+        onChange={(event) => handleChange("shipto-city", event.target.value)}
+      />
+      <input
+        type="text"
+        name="shipto-state"
+        id="shipto-state"
+        placeholder="Provide the State"
+        value={inputData["shipto-state"]}
+        onChange={(event) => handleChange("shipto-state", event.target.value)}
+      />
+      <input
+        type="text"
+        name="shipto-postalcode"
+        id="shipto-postalcode"
+        placeholder="Provide the Postal Code"
+        value={inputData["shipto-postalcode"]}
+        onChange={(event) =>
+          handleChange("shipto-postalcode", event.target.value)
+        }
       />
       <button type="button" onClick={() => next(inputData)}>
         Next
