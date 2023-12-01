@@ -9,8 +9,8 @@ export const WizardUI = ({ handleSubmit }) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState([]);
 
-  const { shipment, ...shipmentProps } = useGetOrCreateShipment();
-  console.log({ shipment, shipmentProps });
+  const { data: warehouses, isLoading: warehousesLoading } =
+    useListWarehouses();
 
   useEffect(() => {
     const handleSelection = (event) => {
@@ -50,6 +50,8 @@ export const WizardUI = ({ handleSubmit }) => {
               <StepConfirmAddressFrom
                 next={nextHandler}
                 selectedText={selectedText}
+                warehouses={warehouses}
+                isLoading={warehousesLoading}
               />
             ),
             2: (
@@ -81,9 +83,14 @@ export const WizardUI = ({ handleSubmit }) => {
   );
 };
 
-const StepConfirmAddressFrom = ({ next, selectedText = "" }) => {
+const StepConfirmAddressFrom = ({
+  next,
+  selectedText = "",
+  warehouses,
+  isLoading,
+}) => {
   const [inputData, setInputData] = useState("");
-  const { data: warehouses, isLoading } = useListWarehouses();
+  const [needEdit, setNeedEdit] = useState(false);
 
   useEffect(() => {
     if (selectedText.length) {
@@ -92,8 +99,6 @@ const StepConfirmAddressFrom = ({ next, selectedText = "" }) => {
   }, [selectedText]);
 
   const handleChange = (event) => setInputData(event.target.value);
-
-  console.log({ warehouses });
 
   return (
     <div>
@@ -104,17 +109,19 @@ const StepConfirmAddressFrom = ({ next, selectedText = "" }) => {
           <h2>This is the address you&lsquo;re shipping from</h2>
           <AddressDisplay address={warehouses[0].originAddress} />
           <h3>is this correct?</h3>
-          <input
-            type="text"
-            name="stepone"
-            id="stepone"
-            placeholder="Input Step One"
-            value={inputData.length}
-            onChange={handleChange}
-          />
+          {needEdit && (
+            <input
+              type="text"
+              name="stepone"
+              id="stepone"
+              placeholder="Input Step One"
+              value={inputData}
+              onChange={handleChange}
+            />
+          )}
         </div>
       )}
-      <button type="button" onClick={() => console.log("edit")}>
+      <button type="button" onClick={() => setNeedEdit(!needEdit)}>
         No
       </button>
       <button type="button" onClick={() => next(inputData)}>
