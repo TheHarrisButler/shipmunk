@@ -5,6 +5,7 @@ import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { styles, getOverFlowContainerStyles } from "./content-styles";
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
 import { noop } from "lodash";
+import Draggable from "react-draggable";
 
 // dirty monkeypatch giger theme into emotion theme
 declare module "@emotion/react" {
@@ -98,62 +99,64 @@ export const Content = () => {
   );
 
   return (
-    <div
-      css={{
-        zIndex: 9999,
-        position: "fixed",
-        bottom: "50px",
-        right: "45px",
-      }}
-    >
-      <AlchemyProvider
-        baseURL={"https://elements-staging.shipengine.com"}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        brandName={"paypal_shipcenter" as any}
-        cdnURL="https://cdn.packlink.com"
-        getToken={getToken}
+    <Draggable>
+      <div
+        css={{
+          zIndex: 9999,
+          position: "fixed",
+          bottom: "50px",
+          right: "45px",
+        }}
       >
-        <RootPortalProvider>
-          <div css={styles.contentContainer}>
-            {isOpen && (
-              <div css={getOverFlowContainerStyles(isOpen)}>
-                <ToolBar
-                  onClose={toggleIsElementOpen}
-                  onNavigate={onNavigate}
-                  navigationKey={navigationKey}
-                />
-                {getCurrentNavigation(navigationKey)}
-              </div>
-            )}
-            {!isOpen && (
-              <button
-                css={styles.pillButton}
-                onClick={() => toggleIsElementOpen()}
-              >
-                <div
-                  css={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
+        <AlchemyProvider
+          baseURL={"https://elements-staging.shipengine.com"}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          brandName={"paypal_shipcenter" as any}
+          cdnURL="https://cdn.packlink.com"
+          getToken={getToken}
+        >
+          <RootPortalProvider>
+            <div css={styles.contentContainer}>
+              {isOpen && (
+                <div css={getOverFlowContainerStyles(isOpen)}>
+                  <ToolBar
+                    onClose={toggleIsElementOpen}
+                    onNavigate={onNavigate}
+                    navigationKey={navigationKey}
+                  />
+                  {getCurrentNavigation(navigationKey)}
+                </div>
+              )}
+              {!isOpen && (
+                <button
+                  css={styles.pillButton}
+                  onClick={() => toggleIsElementOpen()}
                 >
                   <div
                     css={{
-                      cursor: "pointer",
-                      width: "50px",
-                      height: "50px",
-                      paddingRight: "1rem",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
                   >
-                    <Shipmunk />
+                    <div
+                      css={{
+                        cursor: "pointer",
+                        width: "50px",
+                        height: "50px",
+                        paddingRight: "1rem",
+                      }}
+                    >
+                      <Shipmunk />
+                    </div>
+                    <span>Get Shipping labels</span>
                   </div>
-                  <span>Get Shipping labels</span>
-                </div>
-              </button>
-            )}
-          </div>
-        </RootPortalProvider>
-      </AlchemyProvider>
-    </div>
+                </button>
+              )}
+            </div>
+          </RootPortalProvider>
+        </AlchemyProvider>
+      </div>
+    </Draggable>
   );
 };
