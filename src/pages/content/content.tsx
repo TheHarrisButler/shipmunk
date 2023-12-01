@@ -15,38 +15,53 @@ declare module "@emotion/react" {
   }
 }
 
+export type NavigationKey = "wizard" | "labels" | "purchase";
+
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [textSelection, setTextSelection] = useState("");
   const [purchasedLabel, setPurchasedLabel] = useState<SE.Label | null>(null);
 
-  type NavigationKey = "wizard" | "history" | "purchase";
   const [navigationKey, setNavigationKey] = useState<NavigationKey>("wizard");
 
   const getCurrentNavigation = (navigatorKey: string) => {
     switch (navigatorKey) {
       case "wizard":
-        return <WizardUI handleSubmit={handleWizardSubmit} />;
+        return (
+          <div css={styles.elementContainer}>
+            <WizardUI handleSubmit={handleWizardSubmit} />;
+          </div>
+        );
       case "purchase":
         return (
-          <PurchaseLabel.Element
-            features={{
-              presentation: { poweredByShipEngine: true },
-              rateForm: { enableFunding: true },
-            }}
-            onLabelCreateSuccess={(label: SE.Label) => {
-              // TODO
-              setPurchasedLabel(label);
-              setNavigationKey("history");
-            }}
-            printLabelLayout={
-              "letter" // : '4x6'
-            }
-          />
+          <div css={styles.elementContainer}>
+            <PurchaseLabel.Element
+              features={{
+                presentation: { poweredByShipEngine: true },
+                rateForm: { enableFunding: true },
+              }}
+              onLabelCreateSuccess={(label: SE.Label) => {
+                setPurchasedLabel(label);
+                setNavigationKey("labels");
+              }}
+              printLabelLayout={
+                "letter" // : '4x6'
+              }
+            />
+          </div>
         );
-      case "history":
-        return <LabelsGrid purchasedLabel={purchasedLabel} />;
+      case "labels":
+        return (
+          <div css={styles.elementContainer}>
+            <LabelsGrid purchasedLabel={purchasedLabel} />
+          </div>
+        );
     }
+  };
+
+  const onNavigate = (key: NavigationKey) => {
+    setNavigationKey(key);
+    setPurchasedLabel(null);
   };
 
   // handle text selection
@@ -102,10 +117,10 @@ export const Content = () => {
           <div css={styles.contentContainer}>
             {isOpen && (
               <div css={getOverFlowContainerStyles(isOpen)}>
-                <ToolBar onClose={toggleIsElementOpen} />
-                <div css={styles.content}>
-                  {getCurrentNavigation(navigationKey)}
-                </div>
+                <ToolBar
+                  onClose={toggleIsElementOpen}
+                  onNavigate={onNavigate}
+                />
                 {getCurrentNavigation(navigationKey)}
               </div>
             )}

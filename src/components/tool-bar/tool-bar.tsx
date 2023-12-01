@@ -1,3 +1,4 @@
+import { NavigationKey } from "@src/pages/content/content";
 import { Shipmunk } from "../shipmunk/shipmunk";
 import { styles, getToolBarButtonStyles } from "./tool-bar-styles";
 import { Icon, IconSize } from "@packlink/giger";
@@ -5,9 +6,10 @@ import { IconNames } from "@packlink/giger-theme";
 
 export type ToolBarProps = {
   onClose: () => void;
+  onNavigate: (key: NavigationKey) => void;
 };
 
-export const ToolBar = ({ onClose }: ToolBarProps) => {
+export const ToolBar = ({ onClose, onNavigate }: ToolBarProps) => {
   return (
     <div css={styles.toolBar}>
       <div
@@ -24,21 +26,30 @@ export const ToolBar = ({ onClose }: ToolBarProps) => {
           alignItems: "center",
         }}
       >
-        <button css={getToolBarButtonStyles}>
+        <button
+          css={getToolBarButtonStyles}
+          onClick={() => onNavigate("wizard")}
+        >
           <Icon
             css={styles.icons}
             name={IconNames.UPGRADE}
             size={IconSize.SIZE_REGULAR}
           />
         </button>
-        <button css={getToolBarButtonStyles}>
+        <button
+          css={getToolBarButtonStyles}
+          onClick={() => onNavigate("labels")}
+        >
           <Icon
             css={styles.icons}
             name={IconNames.LIST}
             size={IconSize.SIZE_REGULAR}
           />
         </button>
-        <button css={getToolBarButtonStyles}>
+        <button
+          css={getToolBarButtonStyles}
+          onClick={() => onNavigate("purchase")}
+        >
           <Icon
             css={styles.icons}
             name={IconNames.FAST_DELIVERY}
