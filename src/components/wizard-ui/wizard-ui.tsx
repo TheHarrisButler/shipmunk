@@ -74,9 +74,12 @@ export const WizardUI = ({ handleSubmit }) => {
             ),
           }[step]
         }
-        <button type="submit">
-          {/* update button text */}
-          Eject
+        <button
+          type="submit"
+          disabled={step < 4}
+          onClick={() => console.log("creating shipment")}
+        >
+          Create Shipment
         </button>
       </form>
     </div>
