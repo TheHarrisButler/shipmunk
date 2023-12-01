@@ -22,6 +22,7 @@ export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [textSelection, setTextSelection] = useState("");
   const [purchasedLabel, setPurchasedLabel] = useState<SE.Label | null>(null);
+  const [shipmentId, setShipmentId] = useState<string>();
 
   const [navigationKey, setNavigationKey] = useState<NavigationKey>("wizard");
 
@@ -48,6 +49,7 @@ export const Content = () => {
               printLabelLayout={
                 "letter" // : '4x6'
               }
+              shipmentId={shipmentId}
             />
           </div>
         );
@@ -91,7 +93,10 @@ export const Content = () => {
     return token;
   };
 
-  const handleWizardSubmit = useCallback(() => noop, []);
+  const handleWizardSubmit = (shipment: SE.SalesOrderShipment) => {
+    setShipmentId(shipment.shipmentId);
+    setNavigationKey("purchase");
+  };
 
   const toggleIsElementOpen = useCallback(
     () => setIsOpen((isOpen) => !isOpen),
