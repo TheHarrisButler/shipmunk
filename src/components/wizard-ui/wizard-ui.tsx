@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 
+import { useListWarehouses } from "@shipengine/alchemy";
+import { useGetOrCreateShipment } from "./hooks/use-get-or-create-shipment";
+
 export const WizardUI = ({ handleSubmit }) => {
   const [selectedText, setSelectedText] = useState("");
   const [step, setStep] = useState(1);
   const [data, setData] = useState([]);
+
+  const { shipment, ...shipmentProps } = useGetOrCreateShipment();
+  console.log({ shipment, shipmentProps });
 
   useEffect(() => {
     const handleSelection = (event) => {
@@ -39,9 +45,30 @@ export const WizardUI = ({ handleSubmit }) => {
       <form onSubmit={submitHandler}>
         {
           {
-            1: <StepOne next={nextHandler} selectedText={selectedText} />,
-            2: <StepTwo next={nextHandler} selectedText={selectedText} />,
-            3: <StepThree next={nextHandler} selectedText={selectedText} />,
+            1: (
+              <StepConfirmAddressFrom
+                next={nextHandler}
+                selectedText={selectedText}
+              />
+            ),
+            2: (
+              <StepProvideAddressTo
+                next={nextHandler}
+                selectedText={selectedText}
+              />
+            ),
+            3: (
+              <StepProvideDimensions
+                next={nextHandler}
+                selectedText={selectedText}
+              />
+            ),
+            4: (
+              <StepProvideWeight
+                next={nextHandler}
+                selectedText={selectedText}
+              />
+            ),
           }[step]
         }
         <button type="submit">
@@ -53,8 +80,9 @@ export const WizardUI = ({ handleSubmit }) => {
   );
 };
 
-const StepOne = ({ next, selectedText = "" }) => {
+const StepConfirmAddressFrom = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState("");
+  const { data: warehouses, isLoading } = useListWarehouses();
 
   useEffect(() => {
     if (selectedText.length) {
@@ -64,17 +92,25 @@ const StepOne = ({ next, selectedText = "" }) => {
 
   const handleChange = (event) => setInputData(event.target.value);
 
+  console.log({ warehouses });
+
   return (
     <div>
-      <h2>Step One</h2>
-      <input
-        type="text"
-        name="stepone"
-        id="stepone"
-        placeholder="Input Step One"
-        value={inputData}
-        onChange={handleChange}
-      />
+      <h2>This is the address you&lsquo;re shipping from is this correct?</h2>
+      {isLoading ? (
+        <p>Loading your shipping address</p>
+      ) : (
+        <div>
+          <input
+            type="text"
+            name="stepone"
+            id="stepone"
+            placeholder="Input Step One"
+            value={inputData.length}
+            onChange={handleChange}
+          />
+        </div>
+      )}
       <button type="button" onClick={() => next(inputData)}>
         Next
       </button>
@@ -82,7 +118,7 @@ const StepOne = ({ next, selectedText = "" }) => {
   );
 };
 
-const StepTwo = ({ next, selectedText = "" }) => {
+const StepProvideAddressTo = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState("");
   useEffect(() => {
     if (selectedText.length) {
@@ -94,7 +130,7 @@ const StepTwo = ({ next, selectedText = "" }) => {
 
   return (
     <div>
-      <h2>Step Two</h2>
+      <h2>Select address to ship to</h2>
       <input
         type="text"
         name="steptwo"
@@ -110,7 +146,7 @@ const StepTwo = ({ next, selectedText = "" }) => {
   );
 };
 
-const StepThree = ({ next, selectedText = "" }) => {
+const StepProvideDimensions = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState("");
   useEffect(() => {
     if (selectedText.length) {
@@ -122,12 +158,40 @@ const StepThree = ({ next, selectedText = "" }) => {
 
   return (
     <div>
-      <h2>Step Three</h2>
+      <h2>Select the Dimensions</h2>
       <input
         type="text"
         name="stepthree"
         id="stepthree"
         placeholder="Input Step Three"
+        value={inputData}
+        onChange={handleChange}
+      />
+      <button type="button" onClick={() => next(inputData)}>
+        Next
+      </button>
+    </div>
+  );
+};
+
+const StepProvideWeight = ({ next, selectedText = "" }) => {
+  const [inputData, setInputData] = useState("");
+  useEffect(() => {
+    if (selectedText.length) {
+      setInputData(selectedText);
+    }
+  }, [selectedText]);
+
+  const handleChange = (event) => setInputData(event.target.value);
+
+  return (
+    <div>
+      <h2>Select Weight</h2>
+      <input
+        type="text"
+        name="stepfour"
+        id="stepfour"
+        placeholder="Input Step Four"
         value={inputData}
         onChange={handleChange}
       />
