@@ -1,5 +1,7 @@
 import { Shipmunk } from "../shipmunk/shipmunk";
 import { styles, getToolBarButtonStyles } from "./tool-bar-styles";
+import { Icon, IconSize } from "@packlink/giger";
+import { IconNames } from "@packlink/giger-theme";
 
 export type ToolBarProps = {
   onClose: () => void;
@@ -22,9 +24,34 @@ export const ToolBar = ({ onClose }: ToolBarProps) => {
           alignItems: "center",
         }}
       >
-        <button css={getToolBarButtonStyles}>Label Wizard</button>
-        <button css={getToolBarButtonStyles}>Label History</button>
-        <button onClick={onClose}>X</button>
+        <button css={getToolBarButtonStyles}>
+          <Icon
+            css={styles.icons}
+            name={IconNames.UPGRADE}
+            size={IconSize.SIZE_REGULAR}
+          />
+        </button>
+        <button css={getToolBarButtonStyles}>
+          <Icon
+            css={styles.icons}
+            name={IconNames.LIST}
+            size={IconSize.SIZE_REGULAR}
+          />
+        </button>
+        <button css={getToolBarButtonStyles}>
+          <Icon
+            css={styles.icons}
+            name={IconNames.FAST_DELIVERY}
+            size={IconSize.SIZE_REGULAR}
+          />
+        </button>
+        <button css={getToolBarButtonStyles} onClick={onClose}>
+          <Icon
+            css={styles.icons}
+            name={IconNames.CLOSE}
+            size={IconSize.SIZE_REGULAR}
+          />
+        </button>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 export const Shipmunk = () => {
   return (
     <svg
-      viewBox="-3.6 -3.6 43.20 43.20"
+      viewBox="0 0 36 36"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       aria-hidden="true"
@@ -10,27 +10,11 @@ export const Shipmunk = () => {
       preserveAspectRatio="xMidYMid meet"
       fill="#000000"
     >
-      <g
-        id="SVGRepo_bgCarrier"
-        stroke-width="0"
-        transform="translate(0,0), scale(1)"
-      >
-        <rect
-          x="-3.6"
-          y="-3.6"
-          width="43.20"
-          height="43.20"
-          rx="21.6"
-          fill="#45AAF2"
-          strokewidth="0"
-        ></rect>
-      </g>
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
       <g
         id="SVGRepo_tracerCarrier"
         stroke-linecap="round"
         stroke-linejoin="round"
-        stroke="#CCCCCC"
-        stroke-width="0.072"
       ></g>
       <g id="SVGRepo_iconCarrier">
         <path
