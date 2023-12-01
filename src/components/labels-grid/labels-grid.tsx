@@ -19,7 +19,10 @@ export const LabelsGrid = () => {
   );
 
   if (labelsLoading) return <div>Loading...</div>;
-  // TODO: Display if no labels
+  if (!labels?.length)
+    return (
+      <div>No labels found, open up the Wizard to start making labels!</div>
+    );
 
   return (
     <div>
