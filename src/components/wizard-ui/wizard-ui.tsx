@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { useListWarehouses } from "@shipengine/alchemy";
+import {
+  useListWarehouses,
+  useUpdateSalesOrderShipment,
+} from "@shipengine/alchemy";
 
 import { AddressDisplay } from "@src/components/address-display/address-display";
 import { useGetOrCreateShipment } from "./hooks/use-get-or-create-shipment";
@@ -11,6 +14,9 @@ export const WizardUI = ({ handleSubmit }) => {
 
   const { data: warehouses, isLoading: warehousesLoading } =
     useListWarehouses();
+  const { shipment } = useGetOrCreateShipment();
+  const { error: updateShipmentErrors, mutateAsync: updateShipment } =
+    useUpdateSalesOrderShipment();
 
   useEffect(() => {
     const handleSelection = (event) => {
@@ -33,8 +39,18 @@ export const WizardUI = ({ handleSubmit }) => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    console.log({
-      data,
+    const addressData = data[1];
+
+    updateShipment({
+      ...shipment,
+      shipTo: {
+        name: addressData["shipto-name"],
+        addressLine1: addressData["shipto-address"],
+        postalCode: addressData["shipto-postalcode"],
+        stateProvince: addressData["shipto-state"],
+        cityLocality: addressData["shipto-city"],
+        countryCode: addressData["shipto-country"],
+      },
     });
 
     handleSubmit();
