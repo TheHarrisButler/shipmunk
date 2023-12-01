@@ -15,7 +15,7 @@ declare module "@emotion/react" {
 }
 
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
-import { noop } from "lodash";
+import { noop, set } from "lodash";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +37,7 @@ export const Content = () => {
             }}
             onLabelCreateSuccess={() => {
               // TODO
+              setNavigationKey("history");
             }}
             printLabelLayout={
               "letter" // : '4x6'
