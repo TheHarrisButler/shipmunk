@@ -5,11 +5,16 @@ import { Icon, IconSize } from "@packlink/giger";
 import { IconNames } from "@packlink/giger-theme";
 
 export type ToolBarProps = {
+  navigationKey: NavigationKey;
   onClose: () => void;
   onNavigate: (key: NavigationKey) => void;
 };
 
-export const ToolBar = ({ onClose, onNavigate }: ToolBarProps) => {
+export const ToolBar = ({
+  navigationKey,
+  onClose,
+  onNavigate,
+}: ToolBarProps) => {
   return (
     <div css={styles.toolBar}>
       <div
@@ -27,7 +32,7 @@ export const ToolBar = ({ onClose, onNavigate }: ToolBarProps) => {
         }}
       >
         <button
-          css={getToolBarButtonStyles}
+          css={getToolBarButtonStyles(navigationKey === "wizard")}
           onClick={() => onNavigate("wizard")}
         >
           <Icon
@@ -37,7 +42,7 @@ export const ToolBar = ({ onClose, onNavigate }: ToolBarProps) => {
           />
         </button>
         <button
-          css={getToolBarButtonStyles}
+          css={getToolBarButtonStyles(navigationKey === "labels")}
           onClick={() => onNavigate("labels")}
         >
           <Icon
@@ -47,7 +52,7 @@ export const ToolBar = ({ onClose, onNavigate }: ToolBarProps) => {
           />
         </button>
         <button
-          css={getToolBarButtonStyles}
+          css={getToolBarButtonStyles(navigationKey === "purchase")}
           onClick={() => onNavigate("purchase")}
         >
           <Icon
@@ -56,7 +61,7 @@ export const ToolBar = ({ onClose, onNavigate }: ToolBarProps) => {
             size={IconSize.SIZE_REGULAR}
           />
         </button>
-        <button css={getToolBarButtonStyles} onClick={onClose}>
+        <button css={getToolBarButtonStyles(false)} onClick={onClose}>
           <Icon
             css={styles.icons}
             name={IconNames.CLOSE}

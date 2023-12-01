@@ -35,7 +35,7 @@ export const LabelsGrid = ({ purchasedLabel }: LabelsGridProps) => {
     );
 
   return (
-    <div css={{ width: "100%" }}>
+    <div css={{ flexBasis: '100%', height: '100%', width: '100%', position: 'relative' }}>
       {showViewShipment ? (
         <>
           <div css={{ display: "flex", justifyContent: "center" }}>

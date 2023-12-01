@@ -120,6 +120,7 @@ export const Content = () => {
                 <ToolBar
                   onClose={toggleIsElementOpen}
                   onNavigate={onNavigate}
+                  navigationKey={navigationKey}
                 />
                 {getCurrentNavigation(navigationKey)}
               </div>
