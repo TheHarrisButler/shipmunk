@@ -11,7 +11,7 @@ export const styles = createStyles({
   },
 
   section: {
-    padding: "0 10px",
+    padding: "0 20px",
     display: "grid",
     // super hard coded, but container will always be same size so works for now
     gridTemplateColumns: "40px 200px 100px 60px",

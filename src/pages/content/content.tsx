@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { LabelsGrid, Shipmunk } from "../../components";
-import { AlchemyProvider } from "@shipengine/alchemy";
+import { AlchemyProvider, SE } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { createStyles } from "../../utils";
 import { keyframes, Theme } from "@emotion/react";
@@ -15,11 +15,12 @@ declare module "@emotion/react" {
 }
 
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
-import { noop, set } from "lodash";
+import { noop } from "lodash";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [textSelection, setTextSelection] = useState("");
+  const [purchasedLabel, setPurchasedLabel] = useState<SE.Label | null>(null);
 
   type NavigationKey = "wizard" | "history" | "purchase";
   const [navigationKey, setNavigationKey] = useState<NavigationKey>("wizard");
@@ -35,8 +36,9 @@ export const Content = () => {
               presentation: { poweredByShipEngine: true },
               rateForm: { enableFunding: true },
             }}
-            onLabelCreateSuccess={() => {
+            onLabelCreateSuccess={(label: SE.Label) => {
               // TODO
+              setPurchasedLabel(label);
               setNavigationKey("history");
             }}
             printLabelLayout={
@@ -45,7 +47,7 @@ export const Content = () => {
           />
         );
       case "history":
-        return <LabelsGrid />;
+        return <LabelsGrid purchasedLabel={purchasedLabel} />;
     }
   };
 
