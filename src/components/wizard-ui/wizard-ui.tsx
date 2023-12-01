@@ -163,25 +163,48 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
 };
 
 const StepProvideDimensions = ({ next, selectedText = "" }) => {
-  const [inputData, setInputData] = useState("");
+  const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
       setInputData(selectedText);
     }
   }, [selectedText]);
 
-  const handleChange = (event) => setInputData(event.target.value);
+  const handleChange = (name, value) =>
+    setInputData({ ...inputData, [name]: value });
 
   return (
     <div>
       <h2>Select the Dimensions</h2>
       <input
         type="text"
-        name="stepthree"
-        id="stepthree"
-        placeholder="Input Step Three"
-        value={inputData}
-        onChange={handleChange}
+        name="dimensions-legth"
+        id="dimensions-legth"
+        placeholder="Provide Length"
+        value={inputData["dimensions-legth"]}
+        onChange={(event) =>
+          handleChange("dimensions-length", event.target.value)
+        }
+      />
+      <input
+        type="text"
+        name="dimensions-width"
+        id="dimensions-width"
+        placeholder="Provide Width"
+        value={inputData["dimensions-width"]}
+        onChange={(event) =>
+          handleChange("dimensions-width", event.target.value)
+        }
+      />
+      <input
+        type="text"
+        name="dimensions-height"
+        id="dimensions-height"
+        placeholder="Provide Height"
+        value={inputData["dimensions-height"]}
+        onChange={(event) =>
+          handleChange("dimensions-height", event.target.value)
+        }
       />
       <button type="button" onClick={() => next(inputData)}>
         Next
