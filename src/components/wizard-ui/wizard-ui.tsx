@@ -36,12 +36,12 @@ export const WizardUI = ({ handleSubmit }) => {
     setSelectedText("");
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
 
     const addressData = data[1];
 
-    updateShipment({
+    const updatedShipment = await updateShipment({
       ...shipment,
       shipTo: {
         name: addressData["shipto-name"],
@@ -53,7 +53,7 @@ export const WizardUI = ({ handleSubmit }) => {
       },
     });
 
-    handleSubmit();
+    handleSubmit(updatedShipment);
   };
 
   return (
