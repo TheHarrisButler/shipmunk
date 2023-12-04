@@ -1,21 +1,18 @@
-import { useEffect, useState } from "react";
-import {
-  useListWarehouses,
-  useUpdateSalesOrderShipment,
-} from "@shipengine/alchemy";
+import {useEffect, useState} from "react";
+import {useListWarehouses, useParseAddress, useUpdateSalesOrderShipment,} from "@shipengine/alchemy";
 
-import { AddressDisplay } from "@src/components/address-display/address-display";
-import { useGetOrCreateShipment } from "./hooks/use-get-or-create-shipment";
+import {AddressDisplay} from "@src/components/address-display/address-display";
+import {useGetOrCreateShipment} from "./hooks/use-get-or-create-shipment";
 
-export const WizardUI = ({ handleSubmit }) => {
+export const WizardUI = ({handleSubmit}) => {
   const [selectedText, setSelectedText] = useState("");
   const [step, setStep] = useState(1);
   const [data, setData] = useState([]);
 
-  const { data: warehouses, isLoading: warehousesLoading } =
+  const {data: warehouses, isLoading: warehousesLoading} =
     useListWarehouses();
-  const { shipment } = useGetOrCreateShipment();
-  const { error: updateShipmentErrors, mutateAsync: updateShipment } =
+  const {shipment} = useGetOrCreateShipment();
+  const {error: updateShipmentErrors, mutateAsync: updateShipment} =
     useUpdateSalesOrderShipment();
 
   useEffect(() => {
@@ -120,11 +117,11 @@ export const WizardUI = ({ handleSubmit }) => {
 };
 
 const StepConfirmAddressFrom = ({
-  next,
-  selectedText = "",
-  warehouses,
-  isLoading,
-}) => {
+                                  next,
+                                  selectedText = "",
+                                  warehouses,
+                                  isLoading,
+                                }) => {
   const [inputData, setInputData] = useState("");
   const [needEdit, setNeedEdit] = useState(false);
 
@@ -143,7 +140,7 @@ const StepConfirmAddressFrom = ({
       ) : (
         <div>
           <h2>This is the address you&lsquo;re shipping from</h2>
-          <AddressDisplay address={warehouses[0].originAddress} />
+          <AddressDisplay address={warehouses[0].originAddress}/>
           <h3>is this correct?</h3>
           {needEdit && (
             <input
@@ -167,7 +164,8 @@ const StepConfirmAddressFrom = ({
   );
 };
 
-const StepProvideAddressTo = ({ next, selectedText = "" }) => {
+const StepProvideAddressTo = ({next, selectedText = ""}) => {
+  const parseAddress = useParseAddress();
   const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
@@ -176,10 +174,40 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
   }, [selectedText]);
 
   const handleChange = (name, value) =>
-    setInputData({ ...inputData, [name]: value });
+    setInputData({...inputData, [name]: value});
+
+  useEffect(() => {
+    try {
+      const isShopifyPage = location.host.endsWith('shopify.com') || // actual shopify
+        (location.host === '' || location.host.split(':')[0] === 'localhost') && document.title.endsWith('Shopify') // dev shopify example page
+      if (isShopifyPage) {
+        const shopifyAddressContentElement = (([...document.querySelectorAll('[class^="Polaris-InlineStack"]')]
+          .find(elem => elem.textContent == 'Shipping address')?.nextSibling ?? undefined) as HTMLElement | undefined)
+          ?.querySelector('[class^="Polaris-TextContainer"]') ?? undefined;
+        const addressText = (shopifyAddressContentElement instanceof HTMLElement ? shopifyAddressContentElement.innerText : undefined);
+        const magicAddressString = addressText?.split('\n')
+          ?.slice(1, -1)?.join('\n');
+        if (magicAddressString !== undefined) {
+          debugger;
+          const parsedAddressPromise = parseAddress.mutateAsync({text: magicAddressString})
+          parsedAddressPromise.then(parsedAddress => {
+            debugger;
+            // TODO not sure if these will work as never got this far as network parse dies with 404
+            handleChange("shipto-name", parsedAddress.name);
+            handleChange("shipto-address", parsedAddress.addressLines[0]);
+            handleChange("shipto-postalcode", parsedAddress.postalCode);
+            handleChange("shipto-state", parsedAddress.stateProvince);
+            handleChange("shipto-city", parsedAddress.cityLocality);
+            handleChange("shipto-country", parsedAddress.countryCode);
+          })
+        }
+      }
+    } catch {
+    }
+  }, []);
 
   return (
-    <div>
+    <div style={{display: 'flex', flexDirection: 'column'}}>
       <h2>Select address to ship to</h2>
       Name Country Address Line City State Postal Code
       <input
@@ -241,7 +269,7 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
   );
 };
 
-const StepProvideDimensions = ({ next, selectedText = "" }) => {
+const StepProvideDimensions = ({next, selectedText = ""}) => {
   const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
@@ -250,7 +278,7 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
   }, [selectedText]);
 
   const handleChange = (name, value) =>
-    setInputData({ ...inputData, [name]: value });
+    setInputData({...inputData, [name]: value});
 
   return (
     <div>
@@ -292,7 +320,7 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
   );
 };
 
-const StepProvideWeight = ({ next, selectedText = "" }) => {
+const StepProvideWeight = ({next, selectedText = ""}) => {
   const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
@@ -301,7 +329,7 @@ const StepProvideWeight = ({ next, selectedText = "" }) => {
   }, [selectedText]);
 
   const handleChange = (name, value) =>
-    setInputData({ ...inputData, [name]: value });
+    setInputData({...inputData, [name]: value});
 
   return (
     <div>
