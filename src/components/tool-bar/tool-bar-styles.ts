@@ -30,6 +30,7 @@ export const styles = createStyles({
     borderBottom: "1px solid rgb(222, 222, 222)",
     padding: "4px 4px 4px 14px",
     justifyContent: "space-between",
+    cursor: "move",
   },
   icons: {
     color: "#8A91A4",
