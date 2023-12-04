@@ -3,6 +3,7 @@ import { Label } from "../label/label";
 import { useCallback, useEffect, useState } from "react";
 import { ViewShipment } from "@shipengine/elements";
 import { styles } from "./labels-grid.styles";
+import { LoadingSpinner } from "../loading-spinner/loading-spinner";
 
 export type LabelsGridProps = {
   purchasedLabel: null | SE.Label;
@@ -28,14 +29,21 @@ export const LabelsGrid = ({ purchasedLabel }: LabelsGridProps) => {
     }
   }, [purchasedLabel]);
 
-  if (labelsLoading) return <div>Loading...</div>;
+  if (labelsLoading) return <LoadingSpinner message={"Loading Labels..."} />;
   if (!labels?.length)
     return (
       <div>No labels found, open up the Wizard to start making labels!</div>
     );
 
   return (
-    <div css={{ flexBasis: '100%', height: '100%', width: '100%', position: 'relative' }}>
+    <div
+      css={{
+        flexBasis: "100%",
+        height: "100%",
+        width: "100%",
+        position: "relative",
+      }}
+    >
       {showViewShipment ? (
         <>
           <div css={{ display: "flex", justifyContent: "center" }}>
