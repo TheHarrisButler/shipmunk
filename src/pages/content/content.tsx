@@ -30,7 +30,7 @@ export const Content = () => {
       case "wizard":
         return (
           <div css={styles.elementContainer}>
-            <WizardUI handleSubmit={handleWizardSubmit} />;
+            <WizardUI handleSubmit={handleWizardSubmit} />
           </div>
         );
       case "purchase":
