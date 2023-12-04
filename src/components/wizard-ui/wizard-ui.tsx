@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {useListWarehouses, useParseAddress, useUpdateSalesOrderShipment,} from "@shipengine/alchemy";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {useListWarehouses, useUpdateSalesOrderShipment,} from "@shipengine/alchemy";
 
 import {AddressDisplay} from "@src/components/address-display/address-display";
 import {useGetOrCreateShipment} from "./hooks/use-get-or-create-shipment";
@@ -11,7 +11,7 @@ export const WizardUI = ({handleSubmit}) => {
 
   const {data: warehouses, isLoading: warehousesLoading} =
     useListWarehouses();
-  const {shipment} = useGetOrCreateShipment();
+  const {shipment} = useGetOrCreateShipment(undefined);
   const {error: updateShipmentErrors, mutateAsync: updateShipment} =
     useUpdateSalesOrderShipment();
 
@@ -39,6 +39,10 @@ export const WizardUI = ({handleSubmit}) => {
     const addressData = data[1];
     const dimensionData = data[2];
     const weightData = data[3];
+
+    if(!addressData || !dimensionData || !weightData) {
+      return;
+    }
 
     const updatedShipment = await updateShipment({
       ...shipment,
@@ -157,7 +161,10 @@ const StepConfirmAddressFrom = ({
       <button type="button" onClick={() => setNeedEdit(!needEdit)}>
         No
       </button>
-      <button type="button" onClick={() => next(inputData)}>
+      <button type="button" onClick={(e) => {
+        e.preventDefault();
+        next(inputData)
+      }}>
         Next
       </button>
     </div>
@@ -165,7 +172,6 @@ const StepConfirmAddressFrom = ({
 };
 
 const StepProvideAddressTo = ({next, selectedText = ""}) => {
-  const parseAddress = useParseAddress();
   const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
@@ -176,40 +182,46 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
   const handleChange = (name, value) =>
     setInputData({...inputData, [name]: value});
 
-  useEffect(() => {
+  const isShopifyPage = useMemo(() => {
+    return location.host.endsWith('shopify.com') || // actual shopify
+      (location.host === '' || location.host.split(':')[0] === 'localhost') && document.title.endsWith('Shopify')
+  }, []);
+
+  const scrapeShopifyAddress = useCallback(() => {
     try {
-      const isShopifyPage = location.host.endsWith('shopify.com') || // actual shopify
-        (location.host === '' || location.host.split(':')[0] === 'localhost') && document.title.endsWith('Shopify') // dev shopify example page
-      if (isShopifyPage) {
-        const shopifyAddressContentElement = (([...document.querySelectorAll('[class^="Polaris-InlineStack"]')]
-          .find(elem => elem.textContent == 'Shipping address')?.nextSibling ?? undefined) as HTMLElement | undefined)
-          ?.querySelector('[class^="Polaris-TextContainer"]') ?? undefined;
-        const addressText = (shopifyAddressContentElement instanceof HTMLElement ? shopifyAddressContentElement.innerText : undefined);
-        const magicAddressString = addressText?.split('\n')
-          ?.slice(1, -1)?.join('\n');
-        if (magicAddressString !== undefined) {
-          debugger;
-          const parsedAddressPromise = parseAddress.mutateAsync({text: magicAddressString})
-          parsedAddressPromise.then(parsedAddress => {
-            debugger;
-            // TODO not sure if these will work as never got this far as network parse dies with 404
-            handleChange("shipto-name", parsedAddress.name);
-            handleChange("shipto-address", parsedAddress.addressLines[0]);
-            handleChange("shipto-postalcode", parsedAddress.postalCode);
-            handleChange("shipto-state", parsedAddress.stateProvince);
-            handleChange("shipto-city", parsedAddress.cityLocality);
-            handleChange("shipto-country", parsedAddress.countryCode);
-          })
+      const shopifyAddressContentElement = (([...document.querySelectorAll('[class^="Polaris-InlineStack"]')]
+        .find(elem => elem.textContent == 'Shipping address')?.nextSibling ?? undefined) as HTMLElement | undefined)
+        ?.querySelector('[class^="Polaris-TextContainer"]') ?? undefined;
+      const addressText = (shopifyAddressContentElement instanceof HTMLElement ? shopifyAddressContentElement.innerText : undefined);
+      const magicAddressLines = addressText?.split('\n');
+      if (magicAddressLines !== undefined) {
+        const handleChange = (name, value) =>
+          setInputData(prior => ({...prior, [name]: value}));
+        handleChange('shipto-name', magicAddressLines[0]);
+        handleChange('shipto-address', magicAddressLines[1]);
+        const cityStateZip = magicAddressLines[2].split(' ');
+        handleChange('shipto-city', cityStateZip[0]);
+        handleChange('shipto-state', cityStateZip[1]);
+        handleChange('shipto-postalcode', cityStateZip[2]);
+        // hack
+        if (magicAddressLines[3] === 'United States') {
+          handleChange('shipto-country', 'US');
+        } else {
+          alert('please enter country manually');
         }
       }
     } catch {
+      alert('failed to scrape');
     }
-  }, []);
+  }, [])
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
       <h2>Select address to ship to</h2>
       Name Country Address Line City State Postal Code
+      {isShopifyPage && <button onClick={scrapeShopifyAddress}>
+          Scrape Shopify Address
+      </button>}
       <input
         type="text"
         name="shipto-name"
@@ -223,7 +235,7 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
         name="shipto-country"
         id="shipto-country"
         placeholder="Provide the country"
-        value={inputData["shipto-countrty"]}
+        value={inputData["shipto-country"]}
         onChange={(event) =>
           handleChange("shipto-countrty", event.target.value)
         }
@@ -262,7 +274,10 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
           handleChange("shipto-postalcode", event.target.value)
         }
       />
-      <button type="button" onClick={() => next(inputData)}>
+      <button type="button" onClick={(e) => {
+        e.preventDefault();
+        next(inputData);
+      }}>
         Next
       </button>
     </div>
@@ -313,7 +328,10 @@ const StepProvideDimensions = ({next, selectedText = ""}) => {
           handleChange("dimensions-height", event.target.value)
         }
       />
-      <button type="button" onClick={() => next(inputData)}>
+      <button type="button" onClick={(e) => {
+        e.preventDefault();
+        next(inputData);
+      }}>
         Next
       </button>
     </div>
@@ -351,7 +369,10 @@ const StepProvideWeight = ({next, selectedText = ""}) => {
         onChange={(event) => handleChange("weight-ounces", event.target.value)}
       />
 
-      <button type="button" onClick={() => next(inputData)}>
+      <button type="button" onClick={(e) => {
+        e.preventDefault();
+        next(inputData);
+      }}>
         Next
       </button>
     </div>
