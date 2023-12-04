@@ -22,7 +22,7 @@ export const Content = () => {
 
   // handle text selection
   useEffect(() => {
-    const handleTextSelect = (event) => {
+    const handleTextSelect = (_event: React.MouseEvent) => {
       const selectedText = window.getSelection()?.toString() ?? "";
 
       if (selectedText?.length) {
@@ -91,10 +91,7 @@ export const Content = () => {
               </div>
             )}
             {!isOpen && (
-              <button
-                css={styles.pillButton}
-                onClick={() => toggleIsElementOpen()}
-              >
+              <button css={styles.pillButton} onClick={toggleIsElementOpen}>
                 <div
                   css={{
                     display: "flex",

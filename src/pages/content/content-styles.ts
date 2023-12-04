@@ -23,15 +23,12 @@ export const getOverFlowContainerStyles = (isOpen: boolean): SerializedStyles =>
   });
 
 export const styles = createStyles({
-  contentContainer: (theme) => ({
+  contentContainer: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    input: {
-      backgroundColor: theme.getCardStyle().backgroundColor,
-    },
-  }),
+  },
   elementContainer: {
     display: "flex",
     height: "700px",

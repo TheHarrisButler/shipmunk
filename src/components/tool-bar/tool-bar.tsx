@@ -2,6 +2,7 @@ import { Shipmunk } from "../shipmunk/shipmunk";
 import { styles, getToolBarButtonStyles } from "./tool-bar-styles";
 import { Icon, IconSize } from "@packlink/giger";
 import { IconNames } from "@packlink/giger-theme";
+import Tippy from "@tippyjs/react";
 
 export type ToolBarProps = {
   onClose: () => void;
@@ -24,13 +25,16 @@ export const ToolBar = ({ onClose }: ToolBarProps) => {
           alignItems: "center",
         }}
       >
-        <button css={getToolBarButtonStyles}>
-          <Icon
-            css={styles.icons}
-            name={IconNames.UPGRADE}
-            size={IconSize.SIZE_REGULAR}
-          />
-        </button>
+        <Tippy placement="bottom" content={"Label Wizard"}>
+          <button css={getToolBarButtonStyles}>
+            <Icon
+              css={styles.icons}
+              name={IconNames.UPGRADE}
+              size={IconSize.SIZE_REGULAR}
+            />
+          </button>
+        </Tippy>
+
         <button css={getToolBarButtonStyles}>
           <Icon
             css={styles.icons}
