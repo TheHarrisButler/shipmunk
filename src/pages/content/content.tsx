@@ -4,7 +4,6 @@ import { AlchemyProvider, SE } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { styles, getOverFlowContainerStyles } from "./content-styles";
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
-import { noop } from "lodash";
 import Draggable from "react-draggable";
 
 // dirty monkeypatch giger theme into emotion theme

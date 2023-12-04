@@ -17,7 +17,6 @@
     "@shipengine/alchemy": "^2.4.1",
     "@shipengine/elements": "^0.37.21",
     "@shipengine/react-api": "^0.23.3",
-    "@tippyjs/react": "^4.2.6",
     "concurrently": "^8.2.2",
     "copy-to-clipboard": "^3.3.3",
     "cors": "^2.8.5",
