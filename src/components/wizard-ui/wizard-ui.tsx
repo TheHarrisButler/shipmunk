@@ -40,7 +40,7 @@ export const WizardUI = ({handleSubmit}) => {
     const dimensionData = data[2];
     const weightData = data[3];
 
-    if(!addressData || !dimensionData || !weightData) {
+    if (!addressData || !dimensionData || !weightData) {
       return;
     }
 
@@ -192,6 +192,13 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
       const shopifyAddressContentElement = (([...document.querySelectorAll('[class^="Polaris-InlineStack"]')]
         .find(elem => elem.textContent == 'Shipping address')?.nextSibling ?? undefined) as HTMLElement | undefined)
         ?.querySelector('[class^="Polaris-TextContainer"]') ?? undefined;
+      const borderStyleTarget = (shopifyAddressContentElement?.firstChild ?? undefined);
+      const borderStyleTargetStyle = borderStyleTarget instanceof HTMLElement ? borderStyleTarget.style : undefined;
+      if (borderStyleTargetStyle !== undefined) {
+        // style where the scrape was scraped from ? could remove...
+        borderStyleTargetStyle.boxShadow = '0 0 0 2px rgba(255,0,0,.8),0 0 0 4px rgba(255,255,255,.8),0 0 0 6px rgba(255,0,0,0.8)'
+      }
+
       const addressText = (shopifyAddressContentElement instanceof HTMLElement ? shopifyAddressContentElement.innerText : undefined);
       const magicAddressLines = addressText?.split('\n');
       if (magicAddressLines !== undefined) {
