@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { Shipmunk, ToolBar } from "../../components";
-import { AlchemyProvider } from "@shipengine/alchemy";
+import { Shipmunk, ToolBar, LabelsGrid } from "../../components";
+import { AlchemyProvider, SE } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
 import { styles, getOverFlowContainerStyles } from "./content-styles";
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
@@ -15,14 +15,60 @@ declare module "@emotion/react" {
   }
 }
 
+export type NavigationKey = "wizard" | "labels" | "purchase";
+
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [displayWizard, setDisplayWizard] = useState(false); // default should be for this to be the landing, use state for development
   const [textSelection, setTextSelection] = useState("");
+  const [purchasedLabel, setPurchasedLabel] = useState<SE.Label | null>(null);
+  const [shipmentId, setShipmentId] = useState<string>();
+
+  const [navigationKey, setNavigationKey] = useState<NavigationKey>("wizard");
+
+  const getCurrentNavigation = (navigatorKey: string) => {
+    switch (navigatorKey) {
+      case "wizard":
+        return (
+          <div css={styles.elementContainer}>
+            <WizardUI handleSubmit={handleWizardSubmit} />;
+          </div>
+        );
+      case "purchase":
+        return (
+          <div css={styles.elementContainer}>
+            <PurchaseLabel.Element
+              features={{
+                presentation: { poweredByShipEngine: true },
+                rateForm: { enableFunding: true },
+              }}
+              onLabelCreateSuccess={(label: SE.Label) => {
+                setPurchasedLabel(label);
+                setNavigationKey("labels");
+              }}
+              printLabelLayout={
+                "letter" // : '4x6'
+              }
+              shipmentId={shipmentId}
+            />
+          </div>
+        );
+      case "labels":
+        return (
+          <div css={styles.elementContainer}>
+            <LabelsGrid purchasedLabel={purchasedLabel} />
+          </div>
+        );
+    }
+  };
+
+  const onNavigate = (key: NavigationKey) => {
+    setNavigationKey(key);
+    setPurchasedLabel(null);
+  };
 
   // handle text selection
   useEffect(() => {
-    const handleTextSelect = (_event: React.MouseEvent) => {
+    const handleTextSelect = () => {
       const selectedText = window.getSelection()?.toString() ?? "";
 
       if (selectedText?.length) {
@@ -46,7 +92,10 @@ export const Content = () => {
     return token;
   };
 
-  const handleWizardSubmit = useCallback(() => noop, []);
+  const handleWizardSubmit = (shipment: SE.SalesOrderShipment) => {
+    setShipmentId(shipment.shipmentId);
+    setNavigationKey("purchase");
+  };
 
   const toggleIsElementOpen = useCallback(
     () => setIsOpen((isOpen) => !isOpen),
@@ -73,21 +122,12 @@ export const Content = () => {
           <div css={styles.contentContainer}>
             {isOpen && (
               <div css={getOverFlowContainerStyles(isOpen)}>
-                <ToolBar onClose={toggleIsElementOpen} />
-                <div css={styles.elementContainer}>
-                  <PurchaseLabel.Element
-                    features={{
-                      presentation: { poweredByShipEngine: true },
-                      rateForm: { enableFunding: true },
-                    }}
-                    onLabelCreateSuccess={() => {
-                      // TODO
-                    }}
-                    printLabelLayout={
-                      "letter" // : '4x6'
-                    }
-                  />
-                </div>
+                <ToolBar
+                  onClose={toggleIsElementOpen}
+                  onNavigate={onNavigate}
+                  navigationKey={navigationKey}
+                />
+                {getCurrentNavigation(navigationKey)}
               </div>
             )}
             {!isOpen && (

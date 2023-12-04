@@ -1,7 +1,7 @@
 import { createStyles } from "../../utils";
 import { css, SerializedStyles } from "@emotion/react";
 
-export const getToolBarButtonStyles = (): SerializedStyles =>
+export const getToolBarButtonStyles = (selected: boolean): SerializedStyles =>
   css({
     display: "flex",
     padding: "10px 20px",
@@ -18,6 +18,9 @@ export const getToolBarButtonStyles = (): SerializedStyles =>
     ":hover": {
       backgroundColor: "#EFF2FC",
     },
+    ...(selected && {
+      backgroundColor: "#EFF2FC",
+    }),
   });
 
 export const styles = createStyles({
