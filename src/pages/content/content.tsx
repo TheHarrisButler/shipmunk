@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import {useState, useCallback, useEffect, useRef} from "react";
 import { Shipmunk, ToolBar, LabelsGrid } from "../../components";
 import { AlchemyProvider, SE } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
@@ -44,6 +44,7 @@ export const Content = () => {
               onLabelCreateSuccess={(label: SE.Label) => {
                 setPurchasedLabel(label);
                 setNavigationKey("labels");
+                setShipmentId(undefined);
               }}
               printLabelLayout={
                 "letter" // : '4x6'
@@ -103,7 +104,7 @@ export const Content = () => {
   );
 
   return (
-    <Draggable>
+    <Draggable handle=".draggable_handle">
       <div
         css={{
           zIndex: 9999,

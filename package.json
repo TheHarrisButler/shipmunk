@@ -7,7 +7,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "concurrently --kill-others-on-fail \"nodemon --exec vite build\" \"yarn start-server\"",
-    "start-server": "nodemon --watch server/server.ts --exec ts-node --esm server/server.ts",
+    "start-server": "nodemon --watch server/server.ts --exec tsx server/server.ts",
     "crypt:lock": "git-crypt lock",
     "crypt:unlock": "test -f ./shipmunk-git-crypt-key && git-crypt unlock ./shipmunk-git-crypt-key || echo \"The ./shipmunk-git-crypt-key file missing. Download the file from the ShipEngine – Engineering 1Password vault.\""
   },
@@ -29,6 +29,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
     "react-i18next": "^13.5.0",
+    "tsx": "^4.6.2",
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
