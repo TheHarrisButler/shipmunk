@@ -3,6 +3,7 @@ import {useListWarehouses, useUpdateSalesOrderShipment,} from "@shipengine/alche
 
 import {AddressDisplay} from "@src/components/address-display/address-display";
 import {useGetOrCreateShipment} from "./hooks/use-get-or-create-shipment";
+import {Input} from "@src/components/inputs/Input";
 
 export const WizardUI = ({handleSubmit}) => {
   const [selectedText, setSelectedText] = useState("");
@@ -110,6 +111,7 @@ export const WizardUI = ({handleSubmit}) => {
         }
         <button
           type="submit"
+          style={{marginTop: '2rem'}}
           disabled={step < 4}
           onClick={() => console.log("creating shipment")}
         >
@@ -158,21 +160,17 @@ const StepConfirmAddressFrom = ({
           )}
         </div>
       )}
-      <button type="button" onClick={() => setNeedEdit(!needEdit)}>
-        No
-      </button>
-      <button type="button" onClick={(e) => {
+      <Input type="button" onClick={() => setNeedEdit(!needEdit)} value="No"/>
+      <Input type="button" onClick={(e) => {
         e.preventDefault();
         next(inputData)
-      }}>
-        Next
-      </button>
+      }} value="Next"/>
     </div>
   );
 };
 
 const StepProvideAddressTo = ({next, selectedText = ""}) => {
-  const [inputData, setInputData] = useState({});
+  const [inputData, setInputData] = useState<Record<string, any>>({});
   useEffect(() => {
     if (selectedText.length) {
       setInputData(selectedText);
@@ -195,8 +193,19 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
       const borderStyleTarget = (shopifyAddressContentElement?.firstChild ?? undefined);
       const borderStyleTargetStyle = borderStyleTarget instanceof HTMLElement ? borderStyleTarget.style : undefined;
       if (borderStyleTargetStyle !== undefined) {
-        // style where the scrape was scraped from ? could remove...
-        borderStyleTargetStyle.boxShadow = '0 0 0 2px rgba(255,0,0,.8),0 0 0 4px rgba(255,255,255,.8),0 0 0 6px rgba(255,0,0,0.8)'
+        const blinker = async () => {
+          const previousBoxShadow = borderStyleTargetStyle.boxShadow;
+          const blinkBoxShadow = '0 0 0 2px rgba(255,0,0,.8),0 0 0 4px rgba(255,255,255,.8),0 0 0 6px rgba(255,0,0,0.8)';
+
+          for (let i = 0; i < 3; i++) {
+            borderStyleTargetStyle.boxShadow = blinkBoxShadow;
+            await new Promise(resolve => setTimeout(resolve, 250));
+            borderStyleTargetStyle.boxShadow = previousBoxShadow;
+            await new Promise(resolve => setTimeout(resolve, 250));
+          }
+        };
+
+        void blinker();
       }
 
       const addressText = (shopifyAddressContentElement instanceof HTMLElement ? shopifyAddressContentElement.innerText : undefined);
@@ -223,13 +232,12 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
   }, [])
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
+    <div style={{display: 'flex', flexDirection: 'column', gap: '.45rem'}}>
       <h2>Select address to ship to</h2>
       Name Country Address Line City State Postal Code
-      {isShopifyPage && <button onClick={scrapeShopifyAddress}>
-          Scrape Shopify Address
-      </button>}
-      <input
+      {isShopifyPage && <Input type="button" onClick={scrapeShopifyAddress} value="Scrape Shopify Address"/>}
+      <Input
+        autoFocus
         type="text"
         name="shipto-name"
         id="shipto-name"
@@ -237,7 +245,7 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
         value={inputData["shipto-name"]}
         onChange={(event) => handleChange("shipto-name", event.target.value)}
       />
-      <input
+      <Input
         type="text"
         name="shipto-country"
         id="shipto-country"
@@ -247,7 +255,7 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
           handleChange("shipto-countrty", event.target.value)
         }
       />
-      <input
+      <Input
         type="text"
         name="shipto-address"
         id="shipto-address"
@@ -255,7 +263,7 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
         value={inputData["shipto-address"]}
         onChange={(event) => handleChange("shipto-address", event.target.value)}
       />
-      <input
+      <Input
         type="text"
         name="shipto-city"
         id="shipto-city"
@@ -263,7 +271,7 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
         value={inputData["shipto-city"]}
         onChange={(event) => handleChange("shipto-city", event.target.value)}
       />
-      <input
+      <Input
         type="text"
         name="shipto-state"
         id="shipto-state"
@@ -271,7 +279,7 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
         value={inputData["shipto-state"]}
         onChange={(event) => handleChange("shipto-state", event.target.value)}
       />
-      <input
+      <Input
         type="text"
         name="shipto-postalcode"
         id="shipto-postalcode"
@@ -281,12 +289,10 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
           handleChange("shipto-postalcode", event.target.value)
         }
       />
-      <button type="button" onClick={(e) => {
+      <Input type="button" onClick={(e) => {
         e.preventDefault();
         next(inputData);
-      }}>
-        Next
-      </button>
+      }} value="Next" />
     </div>
   );
 };
@@ -303,10 +309,11 @@ const StepProvideDimensions = ({next, selectedText = ""}) => {
     setInputData({...inputData, [name]: value});
 
   return (
-    <div>
+    <div style={{display: 'flex', flexDirection: 'column', gap: '.45rem'}}>
       <h2>Select the Dimensions</h2>
-      <input
-        type="text"
+      <Input
+        autoFocus
+        type="number"
         name="dimensions-legth"
         id="dimensions-legth"
         placeholder="Provide Length"
@@ -315,8 +322,8 @@ const StepProvideDimensions = ({next, selectedText = ""}) => {
           handleChange("dimensions-length", event.target.value)
         }
       />
-      <input
-        type="text"
+      <Input
+        type="number"
         name="dimensions-width"
         id="dimensions-width"
         placeholder="Provide Width"
@@ -325,8 +332,8 @@ const StepProvideDimensions = ({next, selectedText = ""}) => {
           handleChange("dimensions-width", event.target.value)
         }
       />
-      <input
-        type="text"
+      <Input
+        type="number"
         name="dimensions-height"
         id="dimensions-height"
         placeholder="Provide Height"
@@ -357,18 +364,19 @@ const StepProvideWeight = ({next, selectedText = ""}) => {
     setInputData({...inputData, [name]: value});
 
   return (
-    <div>
+    <div style={{display: 'flex', flexDirection: 'column', gap: '.45rem'}}>
       <h2>Select Weight</h2>
-      <input
-        type="text"
+      <Input
+        autoFocus
+        type="number"
         name="weight-pounds"
         id="weight-pounds"
         placeholder="Provide Weight in Pounds"
         value={inputData["weight-pounds"]}
         onChange={(event) => handleChange("weight-pounds", event.target.value)}
       />
-      <input
-        type="text"
+      <Input
+        type="number"
         name="weight-ounces"
         id="weight-ounces"
         placeholder="Provide Weight in Ounces"

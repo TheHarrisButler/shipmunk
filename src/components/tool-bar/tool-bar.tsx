@@ -17,7 +17,7 @@ export const ToolBar = ({
   onNavigate,
 }: ToolBarProps) => {
   return (
-    <div css={styles.toolBar}>
+    <div css={styles.toolBar} className="draggable_handle">
       <div
         css={{
           width: "30px",

@@ -34,8 +34,9 @@ export const styles = createStyles({
     height: "700px",
     overflowY: "auto",
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    padding: '1em'
   },
   pillButton: {
     display: "flex",
