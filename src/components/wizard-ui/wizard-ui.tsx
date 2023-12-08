@@ -456,11 +456,25 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
 
 const StepProvideWeight = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState({});
+  const [focusField, setFocusField] = useState();
+  const [lastFocusField, setLastFocusField] = useState();
   useEffect(() => {
-    if (selectedText.length) {
-      setInputData(selectedText);
+    if (selectedText.length && focusField == lastFocusField) {
+      setInputData({
+        ...inputData,
+        [focusField]: selectedText,
+      });
     }
-  }, [selectedText]);
+  }, [selectedText, focusField]);
+
+  const handleFocus = (event) => {
+    // setLastFocusField(focusField);
+    setFocusField(event.target.name);
+  };
+
+  const handleBlur = () => {
+    setLastFocusField(focusField);
+  };
 
   const handleChange = (name, value) =>
     setInputData({ ...inputData, [name]: value });
@@ -473,6 +487,8 @@ const StepProvideWeight = ({ next, selectedText = "" }) => {
         type="number"
         name="weight-pounds"
         id="weight-pounds"
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         placeholder="Provide Weight in Pounds"
         value={inputData["weight-pounds"]}
         onChange={(event) => handleChange("weight-pounds", event.target.value)}
@@ -481,6 +497,8 @@ const StepProvideWeight = ({ next, selectedText = "" }) => {
         type="number"
         name="weight-ounces"
         id="weight-ounces"
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         placeholder="Provide Weight in Ounces"
         value={inputData["weight-ounces"]}
         onChange={(event) => handleChange("weight-ounces", event.target.value)}
