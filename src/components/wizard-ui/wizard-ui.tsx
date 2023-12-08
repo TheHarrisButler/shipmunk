@@ -25,10 +25,10 @@ export const WizardUI = ({ handleSubmit }) => {
       // const text = clickedElement.textContent || clickedElement.innerText;
       const text = document.getSelection()?.toString();
 
-      setSelectedText(text);
+      if (text) setSelectedText(text);
     };
-    document.addEventListener("selectionchange", handleSelection);
-    () => document.removeEventListener("selectionchange", handleSelection);
+    document.addEventListener("mouseup", handleSelection);
+    () => document.removeEventListener("mouseup", handleSelection);
   }, []);
 
   const nextHandler = (stepData) => {
