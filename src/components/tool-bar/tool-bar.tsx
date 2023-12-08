@@ -4,6 +4,7 @@ import { styles, getToolBarButtonStyles } from "./tool-bar-styles";
 import { Icon, IconSize } from "@packlink/giger";
 import { IconNames } from "@packlink/giger-theme";
 import { ToolTip } from "../tooltip/tooltip";
+import { Button } from "../button/button";
 
 export type ToolBarProps = {
   navigationKey: NavigationKey;
@@ -33,8 +34,8 @@ export const ToolBar = ({
         }}
       >
         <ToolTip content={"Label Wizard"}>
-          <button
-            css={getToolBarButtonStyles(navigationKey === "wizard")}
+          <Button
+            overrideStyles={getToolBarButtonStyles(navigationKey === "wizard")}
             onClick={() => onNavigate("wizard")}
           >
             <Icon
@@ -42,7 +43,7 @@ export const ToolBar = ({
               name={IconNames.UPGRADE}
               size={IconSize.SIZE_REGULAR}
             />
-          </button>
+          </Button>
         </ToolTip>
         <ToolTip content={"History"}>
           <button

@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect, useRef} from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Shipmunk, ToolBar, LabelsGrid } from "../../components";
 import { AlchemyProvider, SE } from "@shipengine/alchemy";
 import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
@@ -25,40 +25,30 @@ export const Content = () => {
 
   const [navigationKey, setNavigationKey] = useState<NavigationKey>("wizard");
 
-  const getCurrentNavigation = (navigatorKey: string) => {
+  const getCurrentView = (navigatorKey: string) => {
     switch (navigatorKey) {
       case "wizard":
-        return (
-          <div css={styles.elementContainer}>
-            <WizardUI handleSubmit={handleWizardSubmit} />
-          </div>
-        );
+        return <WizardUI handleSubmit={handleWizardSubmit} />;
       case "purchase":
         return (
-          <div css={styles.elementContainer}>
-            <PurchaseLabel.Element
-              features={{
-                presentation: { poweredByShipEngine: true },
-                rateForm: { enableFunding: true },
-              }}
-              onLabelCreateSuccess={(label: SE.Label) => {
-                setPurchasedLabel(label);
-                setNavigationKey("labels");
-                setShipmentId(undefined);
-              }}
-              printLabelLayout={
-                "letter" // : '4x6'
-              }
-              shipmentId={shipmentId}
-            />
-          </div>
+          <PurchaseLabel.Element
+            features={{
+              presentation: { poweredByShipEngine: true },
+              rateForm: { enableFunding: true },
+            }}
+            onLabelCreateSuccess={(label: SE.Label) => {
+              setPurchasedLabel(label);
+              setNavigationKey("labels");
+              setShipmentId(undefined);
+            }}
+            printLabelLayout={
+              "letter" // : '4x6'
+            }
+            shipmentId={shipmentId}
+          />
         );
       case "labels":
-        return (
-          <div css={styles.elementContainer}>
-            <LabelsGrid purchasedLabel={purchasedLabel} />
-          </div>
-        );
+        return <LabelsGrid purchasedLabel={purchasedLabel} />;
     }
   };
 
@@ -129,7 +119,9 @@ export const Content = () => {
                     onNavigate={onNavigate}
                     navigationKey={navigationKey}
                   />
-                  {getCurrentNavigation(navigationKey)}
+                  <div css={styles.elementContainer}>
+                    {getCurrentView(navigationKey)}
+                  </div>
                 </div>
               )}
               {!isOpen && (

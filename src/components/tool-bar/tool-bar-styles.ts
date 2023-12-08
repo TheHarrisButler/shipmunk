@@ -3,17 +3,6 @@ import { css, SerializedStyles } from "@emotion/react";
 
 export const getToolBarButtonStyles = (selected: boolean): SerializedStyles =>
   css({
-    display: "flex",
-    padding: "10px 20px",
-    borderRadius: "5px",
-    fontSize: "16px",
-    fontWeight: "bold",
-    textAlign: "center",
-    textDecoration: "none",
-    cursor: "pointer",
-    border: "none",
-    outline: "none",
-    backgroundColor: "white",
     transition: "background-color 0.3s ease-in-out",
     ":hover": {
       backgroundColor: "#EFF2FC",
