@@ -2,7 +2,6 @@ import jsonwebtoken from "jsonwebtoken";
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import * as fs from "fs";
 
 const app = express();
 
@@ -47,7 +46,7 @@ app.get("/generate-token", async (_req, res) => {
   }
 });
 
-app.use(express.static("server/public"))
+app.use(express.static("server/public"));
 
 app.listen(3002, () => {
   console.log("Server listening on port 3002");

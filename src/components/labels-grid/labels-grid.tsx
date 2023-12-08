@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ViewShipment } from "@shipengine/elements";
 import { styles } from "./labels-grid.styles";
 import { LoadingSpinner } from "../loading-spinner/loading-spinner";
+import { Button } from "../button/button";
 
 export type LabelsGridProps = {
   purchasedLabel: null | SE.Label;
@@ -47,12 +48,12 @@ export const LabelsGrid = ({ purchasedLabel }: LabelsGridProps) => {
       {showViewShipment ? (
         <>
           <div css={{ display: "flex", justifyContent: "center" }}>
-            <button
+            <Button
               css={styles.returnToLabels}
               onClick={() => setShowViewShipment(false)}
             >
               Return to Labels
-            </button>
+            </Button>
           </div>
           <ViewShipment.Element
             features={{

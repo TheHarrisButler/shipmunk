@@ -1,7 +1,11 @@
-import {useState, useCallback, useEffect, useRef} from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Shipmunk, ToolBar, LabelsGrid } from "../../components";
 import { AlchemyProvider, SE } from "@shipengine/alchemy";
-import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
+import {
+  RootPortalProvider,
+  PurchaseLabel,
+  AccountSettings,
+} from "@shipengine/elements";
 import { styles, getOverFlowContainerStyles } from "./content-styles";
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
 import Draggable from "react-draggable";
@@ -15,7 +19,7 @@ declare module "@emotion/react" {
   }
 }
 
-export type NavigationKey = "wizard" | "labels" | "purchase";
+export type NavigationKey = "wizard" | "labels" | "purchase" | "settings";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,40 +29,38 @@ export const Content = () => {
 
   const [navigationKey, setNavigationKey] = useState<NavigationKey>("wizard");
 
-  const getCurrentNavigation = (navigatorKey: string) => {
+  const getCurrentView = (navigatorKey: string) => {
     switch (navigatorKey) {
       case "wizard":
-        return (
-          <div css={styles.elementContainer}>
-            <WizardUI handleSubmit={handleWizardSubmit} />
-          </div>
-        );
+        return <WizardUI handleSubmit={handleWizardSubmit} />;
       case "purchase":
         return (
-          <div css={styles.elementContainer}>
-            <PurchaseLabel.Element
-              features={{
-                presentation: { poweredByShipEngine: true },
-                rateForm: { enableFunding: true },
-              }}
-              onLabelCreateSuccess={(label: SE.Label) => {
-                setPurchasedLabel(label);
-                setNavigationKey("labels");
-                setShipmentId(undefined);
-              }}
-              printLabelLayout={
-                "letter" // : '4x6'
-              }
-              shipmentId={shipmentId}
-            />
-          </div>
+          <PurchaseLabel.Element
+            features={{
+              presentation: { poweredByShipEngine: true },
+              rateForm: { enableFunding: true },
+            }}
+            onLabelCreateSuccess={(label: SE.Label) => {
+              setPurchasedLabel(label);
+              setNavigationKey("labels");
+              setShipmentId(undefined);
+            }}
+            printLabelLayout={
+              "letter" // : '4x6'
+            }
+            shipmentId={shipmentId}
+          />
+        );
+      case "settings":
+        return (
+          <AccountSettings.Element
+            onSaveSettings={() => {
+              console.log("save success");
+            }}
+          />
         );
       case "labels":
-        return (
-          <div css={styles.elementContainer}>
-            <LabelsGrid purchasedLabel={purchasedLabel} />
-          </div>
-        );
+        return <LabelsGrid purchasedLabel={purchasedLabel} />;
     }
   };
 
@@ -116,7 +118,7 @@ export const Content = () => {
         <AlchemyProvider
           baseURL={"https://elements-staging.shipengine.com"}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          brandName={"paypal_shipcenter" as any}
+          brandName={"paypal" as any}
           cdnURL="https://cdn.packlink.com"
           getToken={getToken}
         >
@@ -129,7 +131,9 @@ export const Content = () => {
                     onNavigate={onNavigate}
                     navigationKey={navigationKey}
                   />
-                  {getCurrentNavigation(navigationKey)}
+                  <div css={styles.elementContainer}>
+                    {getCurrentView(navigationKey)}
+                  </div>
                 </div>
               )}
               {!isOpen && (
