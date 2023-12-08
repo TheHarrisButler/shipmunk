@@ -242,7 +242,6 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
     };
 
     if (selectedText.length) {
-      setInputData(selectedText);
       const address = parseAddress(selectedText);
 
       if (address !== undefined) {
