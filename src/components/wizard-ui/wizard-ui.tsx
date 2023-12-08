@@ -378,11 +378,25 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
 
 const StepProvideDimensions = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState({});
+  const [focusField, setFocusField] = useState();
+  const [lastFocusField, setLastFocusField] = useState();
   useEffect(() => {
-    if (selectedText.length) {
-      setInputData(selectedText);
+    if (selectedText.length && focusField == lastFocusField) {
+      setInputData({
+        ...inputData,
+        [focusField]: selectedText,
+      });
     }
-  }, [selectedText]);
+  }, [selectedText, focusField]);
+
+  const handleFocus = (event) => {
+    // setLastFocusField(focusField);
+    setFocusField(event.target.name);
+  };
+
+  const handleBlur = () => {
+    setLastFocusField(focusField);
+  };
 
   const handleChange = (name, value) =>
     setInputData({ ...inputData, [name]: value });
@@ -393,10 +407,12 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
       <Input
         autoFocus
         type="number"
-        name="dimensions-legth"
-        id="dimensions-legth"
+        name="dimensions-length"
+        id="dimensions-length"
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         placeholder="Provide Length"
-        value={inputData["dimensions-legth"]}
+        value={inputData["dimensions-length"]}
         onChange={(event) =>
           handleChange("dimensions-length", event.target.value)
         }
@@ -405,6 +421,8 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
         type="number"
         name="dimensions-width"
         id="dimensions-width"
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         placeholder="Provide Width"
         value={inputData["dimensions-width"]}
         onChange={(event) =>
@@ -415,6 +433,8 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
         type="number"
         name="dimensions-height"
         id="dimensions-height"
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         placeholder="Provide Height"
         value={inputData["dimensions-height"]}
         onChange={(event) =>
