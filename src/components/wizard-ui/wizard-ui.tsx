@@ -245,7 +245,6 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
       setInputData(selectedText);
       const address = parseAddress(selectedText);
 
-      console.log({ address });
       if (address !== undefined) {
         const handleChange = (name, value) =>
           setInputData((prior) => ({ ...prior, [name]: value }));
