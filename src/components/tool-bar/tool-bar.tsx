@@ -69,6 +69,18 @@ export const ToolBar = ({
             />
           </Button>
         </ToolTip>
+        <ToolTip content={"Settings"}>
+          <Button
+            css={getToolBarButtonStyles(navigationKey === "settings")}
+            onClick={() => onNavigate("settings")}
+          >
+            <Icon
+              css={styles.icons}
+              name={IconNames.SETTINGS}
+              size={IconSize.SIZE_REGULAR}
+            />
+          </Button>
+        </ToolTip>
 
         <Button css={getToolBarButtonStyles(false)} onClick={onClose}>
           <Icon

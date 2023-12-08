@@ -1,7 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
 import { Shipmunk, ToolBar, LabelsGrid } from "../../components";
 import { AlchemyProvider, SE } from "@shipengine/alchemy";
-import { RootPortalProvider, PurchaseLabel } from "@shipengine/elements";
+import {
+  RootPortalProvider,
+  PurchaseLabel,
+  AccountSettings,
+} from "@shipengine/elements";
 import { styles, getOverFlowContainerStyles } from "./content-styles";
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
 import Draggable from "react-draggable";
@@ -15,7 +19,7 @@ declare module "@emotion/react" {
   }
 }
 
-export type NavigationKey = "wizard" | "labels" | "purchase";
+export type NavigationKey = "wizard" | "labels" | "purchase" | "settings";
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +49,14 @@ export const Content = () => {
               "letter" // : '4x6'
             }
             shipmentId={shipmentId}
+          />
+        );
+      case "settings":
+        return (
+          <AccountSettings.Element
+            onSaveSettings={() => {
+              console.log("save success");
+            }}
           />
         );
       case "labels":
