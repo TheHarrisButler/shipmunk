@@ -81,8 +81,13 @@ export const WizardUI = ({ handleSubmit }) => {
 
     const createWeight = (weight) => {
       const obj = {};
-      if (weight?.value) obj.value = weight.value;
+      let pounds = 0;
+      let ounces = 0;
+      if (weight?.pounds) pounds = +weight.pounds * 16;
+      if (weight?.ounces) ounces = +weight.ounces;
       if (weight?.unit) obj.unit = weight.unit;
+
+      obj.value = pounds + ounces;
       return obj;
     };
 
@@ -99,13 +104,12 @@ export const WizardUI = ({ handleSubmit }) => {
       width: dimensionData?.["dimensions-width"],
       unit: "inch",
     };
+
     const weight = {
-      value: weightData?.["weight-pounds"] * 16 + weightData?.["weight-ounces"],
+      pounds: weightData?.["weight-pounds"],
+      ounces: weightData?.["weight-ounces"],
       unit: "ounce",
     };
-
-    createDimensions(dimensions);
-    createWeight(weight);
 
     const packages = {
       dimensions: createDimensions(dimensions),
