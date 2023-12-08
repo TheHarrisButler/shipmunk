@@ -35,7 +35,7 @@ export const ToolBar = ({
       >
         <ToolTip content={"Label Wizard"}>
           <Button
-            overrideStyles={getToolBarButtonStyles(navigationKey === "wizard")}
+            css={getToolBarButtonStyles(navigationKey === "wizard")}
             onClick={() => onNavigate("wizard")}
           >
             <Icon
@@ -46,7 +46,7 @@ export const ToolBar = ({
           </Button>
         </ToolTip>
         <ToolTip content={"History"}>
-          <button
+          <Button
             css={getToolBarButtonStyles(navigationKey === "labels")}
             onClick={() => onNavigate("labels")}
           >
@@ -55,10 +55,10 @@ export const ToolBar = ({
               name={IconNames.LIST}
               size={IconSize.SIZE_REGULAR}
             />
-          </button>
+          </Button>
         </ToolTip>
         <ToolTip content={"Buy Label"}>
-          <button
+          <Button
             css={getToolBarButtonStyles(navigationKey === "purchase")}
             onClick={() => onNavigate("purchase")}
           >
@@ -67,16 +67,16 @@ export const ToolBar = ({
               name={IconNames.FAST_DELIVERY}
               size={IconSize.SIZE_REGULAR}
             />
-          </button>
+          </Button>
         </ToolTip>
 
-        <button css={getToolBarButtonStyles(false)} onClick={onClose}>
+        <Button css={getToolBarButtonStyles(false)} onClick={onClose}>
           <Icon
             css={styles.icons}
             name={IconNames.CLOSE}
             size={IconSize.SIZE_REGULAR}
           />
-        </button>
+        </Button>
       </div>
     </div>
   );

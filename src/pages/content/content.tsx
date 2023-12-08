@@ -106,7 +106,7 @@ export const Content = () => {
         <AlchemyProvider
           baseURL={"https://elements-staging.shipengine.com"}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          brandName={"paypal_shipcenter" as any}
+          brandName={"paypal" as any}
           cdnURL="https://cdn.packlink.com"
           getToken={getToken}
         >
