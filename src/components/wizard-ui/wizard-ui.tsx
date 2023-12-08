@@ -45,32 +45,37 @@ export const WizardUI = ({ handleSubmit }) => {
     const weightData = data[3];
 
     if (!addressData || !dimensionData || !weightData) {
+      console.log("missing data");
+      console.log({ addressData, dimensionData, weightData });
       return;
     }
 
+    const shipTo = {
+      name: addressData["shipto-name"],
+      addressLine1: addressData["shipto-address"],
+      postalCode: addressData["shipto-postalcode"],
+      stateProvince: addressData["shipto-state"],
+      cityLocality: addressData["shipto-city"],
+      countryCode: addressData["shipto-country"],
+    };
+    const dimensions = {
+      height: dimensionData["dimensions-height"],
+      length: dimensionData["dimensions-length"],
+      width: dimensionData["dimensions-width"],
+      unit: "inch",
+    };
+    const weight = {
+      value: weightData["weight-pounds"] * 16 + weightData["weight-ounces"],
+      unit: "ounce",
+    };
+
     const updatedShipment = await updateShipment({
       ...shipment,
-      shipTo: {
-        name: addressData["shipto-name"],
-        addressLine1: addressData["shipto-address"],
-        postalCode: addressData["shipto-postalcode"],
-        stateProvince: addressData["shipto-state"],
-        cityLocality: addressData["shipto-city"],
-        countryCode: addressData["shipto-country"],
-      },
+      shipTo,
       packages: [
         {
-          dimensions: {
-            height: dimensionData["dimensions-height"],
-            length: dimensionData["dimensions-length"],
-            width: dimensionData["dimensions-width"],
-            unit: "inch",
-          },
-          weight: {
-            value:
-              weightData["weight-pounds"] * 16 + weightData["weight-ounces"],
-            unit: "ounce",
-          },
+          dimensions,
+          weight,
         },
       ],
     });
