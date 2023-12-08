@@ -44,40 +44,78 @@ export const WizardUI = ({ handleSubmit }) => {
     const dimensionData = data[2];
     const weightData = data[3];
 
-    if (!addressData || !dimensionData || !weightData) {
-      console.log("missing data");
-      console.log({ addressData, dimensionData, weightData });
-      return;
-    }
+    // if (!addressData || !dimensionData || !weightData) {
+    //   console.log("missing data");
+    //   console.log({ addressData, dimensionData, weightData });
+    //   return;
+    // }
 
     const shipTo = {
-      name: addressData["shipto-name"],
-      addressLine1: addressData["shipto-address"],
-      postalCode: addressData["shipto-postalcode"],
-      stateProvince: addressData["shipto-state"],
-      cityLocality: addressData["shipto-city"],
-      countryCode: addressData["shipto-country"],
+      name: addressData?.["shipto-name"],
+      addressLine1: addressData?.["shipto-address"],
+      postalCode: addressData?.["shipto-postalcode"],
+      stateProvince: addressData?.["shipto-state"],
+      cityLocality: addressData?.["shipto-city"],
+      countryCode: addressData?.["shipto-country"],
     };
+
+    const createShipTo = (shipTo) => {
+      const obj = {};
+      if (shipTo?.name) obj.name = shipTo.name;
+      if (shipTo?.addressLine1) obj.addressLine1 = shipTo.addressLine1;
+      if (shipTo?.postalCode) obj.postalCode = shipTo.postalCode;
+      if (shipTo?.stateProvince) obj.stateProvince = shipTo.stateProvince;
+      if (shipTo?.cityLocality) obj.cityLocality = shipTo.cityLocality;
+      if (shipTo?.countryCode) obj.countryCode = shipTo.countryCode;
+      return obj;
+    };
+
+    const createDimensions = (dimensions) => {
+      const obj = {};
+      if (dimensions?.height) obj.height = dimensions.height;
+      if (dimensions?.length) obj.length = dimensions.length;
+      if (dimensions?.width) obj.width = dimensions.width;
+      if (dimensions?.unit) obj.unit = dimensions.unit;
+      return obj;
+    };
+
+    const createWeight = (weight) => {
+      const obj = {};
+      if (weight?.value) obj.value = weight.value;
+      if (weight?.unit) obj.unit = weight.unit;
+      return obj;
+    };
+
+    const createPackages = (packages) => {
+      const obj = {};
+      if (packages?.dimensions) obj.dimensions = packages.dimensions;
+      if (packages?.weight) obj.weight = packages.weight;
+      return obj;
+    };
+
     const dimensions = {
-      height: dimensionData["dimensions-height"],
-      length: dimensionData["dimensions-length"],
-      width: dimensionData["dimensions-width"],
+      height: dimensionData?.["dimensions-height"],
+      length: dimensionData?.["dimensions-length"],
+      width: dimensionData?.["dimensions-width"],
       unit: "inch",
     };
     const weight = {
-      value: weightData["weight-pounds"] * 16 + weightData["weight-ounces"],
+      value: weightData?.["weight-pounds"] * 16 + weightData?.["weight-ounces"],
       unit: "ounce",
+    };
+
+    createDimensions(dimensions);
+    createWeight(weight);
+
+    const packages = {
+      dimensions: createDimensions(dimensions),
+      weight: createWeight(weight),
     };
 
     const updatedShipment = await updateShipment({
       ...shipment,
-      shipTo,
-      packages: [
-        {
-          dimensions,
-          weight,
-        },
-      ],
+      shipTo: createShipTo(shipTo),
+      packages: [createPackages(packages)],
     });
 
     handleSubmit(updatedShipment);
