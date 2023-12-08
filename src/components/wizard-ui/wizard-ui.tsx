@@ -225,8 +225,43 @@ const StepConfirmAddressFrom = ({
 const StepProvideAddressTo = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState<Record<string, any>>({});
   useEffect(() => {
+    const parseAddress = (text) => {
+      const regex = /(.*)(?:\r?\n|\r)(.*)(?:\r?\n|\r)(.*)(?:\r?\n|\r)(.*)/;
+      let match = text.match(regex);
+
+      if (match) {
+        return {
+          name: match[1],
+          street: match[2],
+          cityStateZip: match[3],
+          country: match[4],
+        };
+      } else {
+        throw new Error("Text doesn't match expected format");
+      }
+    };
+
     if (selectedText.length) {
       setInputData(selectedText);
+      const address = parseAddress(selectedText);
+
+      console.log({ address });
+      if (address !== undefined) {
+        const handleChange = (name, value) =>
+          setInputData((prior) => ({ ...prior, [name]: value }));
+        handleChange("shipto-name", address.name);
+        handleChange("shipto-address", address.street);
+        const cityStateZip = address.cityStateZip.split(" ");
+        handleChange("shipto-city", cityStateZip[0]);
+        handleChange("shipto-state", cityStateZip[1]);
+        handleChange("shipto-postalcode", cityStateZip[2]);
+
+        if (address.country === "United States") {
+          handleChange("shipto-country", "US");
+        } else {
+          alert("please enter country manually");
+        }
+      }
     }
   }, [selectedText]);
 
