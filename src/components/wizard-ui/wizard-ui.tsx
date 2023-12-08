@@ -163,7 +163,6 @@ export const WizardUI = ({ handleSubmit }) => {
           type="submit"
           style={{ marginTop: "2rem" }}
           disabled={step <= 2}
-          onClick={() => console.log("creating shipment")}
         >
           Create Shipment
         </button>
