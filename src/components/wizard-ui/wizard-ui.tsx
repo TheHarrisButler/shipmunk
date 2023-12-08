@@ -1,19 +1,22 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
-import {useListWarehouses, useUpdateSalesOrderShipment,} from "@shipengine/alchemy";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useListWarehouses,
+  useUpdateSalesOrderShipment,
+} from "@shipengine/alchemy";
 
-import {AddressDisplay} from "@src/components/address-display/address-display";
-import {useGetOrCreateShipment} from "./hooks/use-get-or-create-shipment";
-import {Input} from "@src/components/inputs/Input";
+import { AddressDisplay } from "@src/components/address-display/address-display";
+import { useGetOrCreateShipment } from "./hooks/use-get-or-create-shipment";
+import { Input } from "@src/components/inputs/Input";
 
-export const WizardUI = ({handleSubmit}) => {
+export const WizardUI = ({ handleSubmit }) => {
   const [selectedText, setSelectedText] = useState("");
   const [step, setStep] = useState(1);
   const [data, setData] = useState([]);
 
-  const {data: warehouses, isLoading: warehousesLoading} =
+  const { data: warehouses, isLoading: warehousesLoading } =
     useListWarehouses();
-  const {shipment} = useGetOrCreateShipment(undefined);
-  const {error: updateShipmentErrors, mutateAsync: updateShipment} =
+  const { shipment } = useGetOrCreateShipment(undefined);
+  const { error: updateShipmentErrors, mutateAsync: updateShipment } =
     useUpdateSalesOrderShipment();
 
   useEffect(() => {
@@ -111,8 +114,8 @@ export const WizardUI = ({handleSubmit}) => {
         }
         <button
           type="submit"
-          style={{marginTop: '2rem'}}
-          disabled={step < 4}
+          style={{ marginTop: "2rem" }}
+          disabled={step <= 2}
           onClick={() => console.log("creating shipment")}
         >
           Create Shipment
@@ -123,11 +126,11 @@ export const WizardUI = ({handleSubmit}) => {
 };
 
 const StepConfirmAddressFrom = ({
-                                  next,
-                                  selectedText = "",
-                                  warehouses,
-                                  isLoading,
-                                }) => {
+  next,
+  selectedText = "",
+  warehouses,
+  isLoading,
+}) => {
   const [inputData, setInputData] = useState("");
   const [needEdit, setNeedEdit] = useState(false);
 
@@ -146,7 +149,7 @@ const StepConfirmAddressFrom = ({
       ) : (
         <div>
           <h2>This is the address you&lsquo;re shipping from</h2>
-          <AddressDisplay address={warehouses[0].originAddress}/>
+          <AddressDisplay address={warehouses[0].originAddress} />
           <h3>is this correct?</h3>
           {needEdit && (
             <input
@@ -160,16 +163,20 @@ const StepConfirmAddressFrom = ({
           )}
         </div>
       )}
-      <Input type="button" onClick={() => setNeedEdit(!needEdit)} value="No"/>
-      <Input type="button" onClick={(e) => {
-        e.preventDefault();
-        next(inputData)
-      }} value="Next"/>
+      <Input type="button" onClick={() => setNeedEdit(!needEdit)} value="No" />
+      <Input
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          next(inputData);
+        }}
+        value="Next"
+      />
     </div>
   );
 };
 
-const StepProvideAddressTo = ({next, selectedText = ""}) => {
+const StepProvideAddressTo = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState<Record<string, any>>({});
   useEffect(() => {
     if (selectedText.length) {
@@ -178,64 +185,85 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
   }, [selectedText]);
 
   const handleChange = (name, value) =>
-    setInputData({...inputData, [name]: value});
+    setInputData({ ...inputData, [name]: value });
 
   const isShopifyPage = useMemo(() => {
-    return location.host.endsWith('shopify.com') || // actual shopify
-      (location.host === '' || location.host.split(':')[0] === 'localhost') && document.title.endsWith('Shopify')
+    return (
+      location.host.endsWith("shopify.com") || // actual shopify
+      ((location.host === "" || location.host.split(":")[0] === "localhost") &&
+        document.title.endsWith("Shopify"))
+    );
   }, []);
 
   const scrapeShopifyAddress = useCallback(() => {
     try {
-      const shopifyAddressContentElement = (([...document.querySelectorAll('[class^="Polaris-InlineStack"]')]
-        .find(elem => elem.textContent == 'Shipping address')?.nextSibling ?? undefined) as HTMLElement | undefined)
-        ?.querySelector('[class^="Polaris-TextContainer"]') ?? undefined;
-      const borderStyleTarget = (shopifyAddressContentElement?.firstChild ?? undefined);
-      const borderStyleTargetStyle = borderStyleTarget instanceof HTMLElement ? borderStyleTarget.style : undefined;
+      const shopifyAddressContentElement =
+        (
+          ([
+            ...document.querySelectorAll('[class^="Polaris-InlineStack"]'),
+          ].find((elem) => elem.textContent == "Shipping address")
+            ?.nextSibling ?? undefined) as HTMLElement | undefined
+        )?.querySelector('[class^="Polaris-TextContainer"]') ?? undefined;
+      const borderStyleTarget =
+        shopifyAddressContentElement?.firstChild ?? undefined;
+      const borderStyleTargetStyle =
+        borderStyleTarget instanceof HTMLElement
+          ? borderStyleTarget.style
+          : undefined;
       if (borderStyleTargetStyle !== undefined) {
         const blinker = async () => {
           const previousBoxShadow = borderStyleTargetStyle.boxShadow;
-          const blinkBoxShadow = '0 0 0 2px rgba(255,0,0,.8),0 0 0 4px rgba(255,255,255,.8),0 0 0 6px rgba(255,0,0,0.8)';
+          const blinkBoxShadow =
+            "0 0 0 2px rgba(255,0,0,.8),0 0 0 4px rgba(255,255,255,.8),0 0 0 6px rgba(255,0,0,0.8)";
 
           for (let i = 0; i < 3; i++) {
             borderStyleTargetStyle.boxShadow = blinkBoxShadow;
-            await new Promise(resolve => setTimeout(resolve, 250));
+            await new Promise((resolve) => setTimeout(resolve, 250));
             borderStyleTargetStyle.boxShadow = previousBoxShadow;
-            await new Promise(resolve => setTimeout(resolve, 250));
+            await new Promise((resolve) => setTimeout(resolve, 250));
           }
         };
 
         void blinker();
       }
 
-      const addressText = (shopifyAddressContentElement instanceof HTMLElement ? shopifyAddressContentElement.innerText : undefined);
-      const magicAddressLines = addressText?.split('\n');
+      const addressText =
+        shopifyAddressContentElement instanceof HTMLElement
+          ? shopifyAddressContentElement.innerText
+          : undefined;
+      const magicAddressLines = addressText?.split("\n");
       if (magicAddressLines !== undefined) {
         const handleChange = (name, value) =>
-          setInputData(prior => ({...prior, [name]: value}));
-        handleChange('shipto-name', magicAddressLines[0]);
-        handleChange('shipto-address', magicAddressLines[1]);
-        const cityStateZip = magicAddressLines[2].split(' ');
-        handleChange('shipto-city', cityStateZip[0]);
-        handleChange('shipto-state', cityStateZip[1]);
-        handleChange('shipto-postalcode', cityStateZip[2]);
+          setInputData((prior) => ({ ...prior, [name]: value }));
+        handleChange("shipto-name", magicAddressLines[0]);
+        handleChange("shipto-address", magicAddressLines[1]);
+        const cityStateZip = magicAddressLines[2].split(" ");
+        handleChange("shipto-city", cityStateZip[0]);
+        handleChange("shipto-state", cityStateZip[1]);
+        handleChange("shipto-postalcode", cityStateZip[2]);
         // hack
-        if (magicAddressLines[3] === 'United States') {
-          handleChange('shipto-country', 'US');
+        if (magicAddressLines[3] === "United States") {
+          handleChange("shipto-country", "US");
         } else {
-          alert('please enter country manually');
+          alert("please enter country manually");
         }
       }
     } catch {
-      alert('failed to scrape');
+      alert("failed to scrape");
     }
-  }, [])
+  }, []);
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', gap: '.45rem'}}>
+    <div style={{ display: "flex", flexDirection: "column", gap: ".45rem" }}>
       <h2>Select address to ship to</h2>
       Name Country Address Line City State Postal Code
-      {isShopifyPage && <Input type="button" onClick={scrapeShopifyAddress} value="Scrape Shopify Address"/>}
+      {isShopifyPage && (
+        <Input
+          type="button"
+          onClick={scrapeShopifyAddress}
+          value="Scrape Shopify Address"
+        />
+      )}
       <Input
         autoFocus
         type="text"
@@ -289,15 +317,19 @@ const StepProvideAddressTo = ({next, selectedText = ""}) => {
           handleChange("shipto-postalcode", event.target.value)
         }
       />
-      <Input type="button" onClick={(e) => {
-        e.preventDefault();
-        next(inputData);
-      }} value="Next" />
+      <Input
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          next(inputData);
+        }}
+        value="Next"
+      />
     </div>
   );
 };
 
-const StepProvideDimensions = ({next, selectedText = ""}) => {
+const StepProvideDimensions = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
@@ -306,10 +338,10 @@ const StepProvideDimensions = ({next, selectedText = ""}) => {
   }, [selectedText]);
 
   const handleChange = (name, value) =>
-    setInputData({...inputData, [name]: value});
+    setInputData({ ...inputData, [name]: value });
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', gap: '.45rem'}}>
+    <div style={{ display: "flex", flexDirection: "column", gap: ".45rem" }}>
       <h2>Select the Dimensions</h2>
       <Input
         autoFocus
@@ -342,17 +374,20 @@ const StepProvideDimensions = ({next, selectedText = ""}) => {
           handleChange("dimensions-height", event.target.value)
         }
       />
-      <button type="button" onClick={(e) => {
-        e.preventDefault();
-        next(inputData);
-      }}>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          next(inputData);
+        }}
+      >
         Next
       </button>
     </div>
   );
 };
 
-const StepProvideWeight = ({next, selectedText = ""}) => {
+const StepProvideWeight = ({ next, selectedText = "" }) => {
   const [inputData, setInputData] = useState({});
   useEffect(() => {
     if (selectedText.length) {
@@ -361,10 +396,10 @@ const StepProvideWeight = ({next, selectedText = ""}) => {
   }, [selectedText]);
 
   const handleChange = (name, value) =>
-    setInputData({...inputData, [name]: value});
+    setInputData({ ...inputData, [name]: value });
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', gap: '.45rem'}}>
+    <div style={{ display: "flex", flexDirection: "column", gap: ".45rem" }}>
       <h2>Select Weight</h2>
       <Input
         autoFocus
@@ -384,10 +419,13 @@ const StepProvideWeight = ({next, selectedText = ""}) => {
         onChange={(event) => handleChange("weight-ounces", event.target.value)}
       />
 
-      <button type="button" onClick={(e) => {
-        e.preventDefault();
-        next(inputData);
-      }}>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          next(inputData);
+        }}
+      >
         Next
       </button>
     </div>
