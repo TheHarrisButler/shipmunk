@@ -3,10 +3,27 @@ import {
   useListWarehouses,
   useUpdateSalesOrderShipment,
 } from "@shipengine/alchemy";
-
 import { AddressDisplay } from "@src/components/address-display/address-display";
 import { useGetOrCreateShipment } from "./hooks/use-get-or-create-shipment";
 import { Input } from "@src/components/inputs/Input";
+import { Button } from "@src/components/button/button";
+import { createStyles } from "@src/utils";
+
+const styles = createStyles({
+  button: {
+    display: "flex",
+    padding: "5px 10px",
+    fontSize: "12px",
+    color: "black",
+    ":hover": {
+      backgroundColor: "#1e9aff33",
+    },
+    backgroundColor: "#E0F4FE",
+    border: "1px solid #0070BA",
+    justifyContent: "center",
+    borderRadius: "15px",
+  },
+});
 
 function findLeafNodesWithRegex(node: Node, regex: RegExp): Node[] {
   const matchingNodes: Node[] = [];
@@ -158,8 +175,22 @@ export const WizardUI = ({ handleSubmit }) => {
   };
 
   return (
-    <div>
-      <h1>Welcome to the Label Wizard UI</h1>
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        alighItems: "center",
+      }}
+    >
+      <h1
+        css={{
+          fontSize: "16px",
+          fontWeight: "bold",
+          paddingBottom: "2rem",
+        }}
+      >
+        Welcome to the Shipmunk Label Wizard
+      </h1>
       <form onSubmit={submitHandler}>
         {
           {
@@ -191,13 +222,24 @@ export const WizardUI = ({ handleSubmit }) => {
             ),
           }[step]
         }
-        <button
+        <Button
           type="submit"
-          style={{ marginTop: "2rem" }}
-          disabled={step <= 2}
+          css={[
+            styles.button,
+            {
+              marginTop: "2rem",
+              padding: "10px 20px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              whiteSpace: "nowrap",
+              ...(step <= 2 && {
+                visibility: "hidden",
+              }),
+            },
+          ]}
         >
           Create Shipment
-        </button>
+        </Button>
       </form>
     </div>
   );
@@ -221,14 +263,19 @@ const StepConfirmAddressFrom = ({
   const handleChange = (event) => setInputData(event.target.value);
 
   return (
-    <div>
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        gap: ".45rem",
+      }}
+    >
       {isLoading ? (
         <p>Loading your shipping address</p>
       ) : (
         <div>
-          <h2>This is the address you&lsquo;re shipping from</h2>
           <AddressDisplay address={warehouses[0].originAddress} />
-          <h3>is this correct?</h3>
+          <h2>Is this the address you want to ship from?</h2>
           {needEdit && (
             <input
               type="text"
@@ -241,15 +288,30 @@ const StepConfirmAddressFrom = ({
           )}
         </div>
       )}
-      <Input type="button" onClick={() => setNeedEdit(!needEdit)} value="No" />
-      <Input
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          next(inputData);
+      <div
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          gap: ".5rem",
+          alignItems: "center",
         }}
-        value="Next"
-      />
+      >
+        <Button
+          css={[styles.button, { width: "100px" }]}
+          onClick={(e) => {
+            e.preventDefault();
+            next(inputData);
+          }}
+        >
+          Yes
+        </Button>
+        <Button
+          css={[styles.button, { width: "100px" }]}
+          onClick={() => setNeedEdit(!needEdit)}
+        >
+          No
+        </Button>
+      </div>
     </div>
   );
 };

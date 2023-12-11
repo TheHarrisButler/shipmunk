@@ -2,16 +2,12 @@ import { createStyles } from "../../utils";
 
 export const styles = createStyles({
   returnToLabels: {
-    height: "40px",
-    width: "200px",
-    fontSize: "16px",
-    margin: "20px 0",
+    color: "black",
     ":hover": {
-      backgroundColor: "rgba(30,154,255, 0.2)",
-      cursor: "default",
+      backgroundColor: "#1e9aff33",
     },
-    backgroundColor: "rgba(30,154,255, 0.1)",
-    border: "1px solid rgba(30,154,255, 0.5)",
+    backgroundColor: "#E0F4FE",
+    border: "1px solid #0070BA",
     borderRadius: "4px",
   },
 });

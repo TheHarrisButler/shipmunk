@@ -4,6 +4,7 @@ import { styles, getToolBarButtonStyles } from "./tool-bar-styles";
 import { Icon, IconSize } from "@packlink/giger";
 import { IconNames } from "@packlink/giger-theme";
 import { ToolTip } from "../tooltip/tooltip";
+import { Button } from "../button/button";
 
 export type ToolBarProps = {
   navigationKey: NavigationKey;
@@ -33,7 +34,7 @@ export const ToolBar = ({
         }}
       >
         <ToolTip content={"Label Wizard"}>
-          <button
+          <Button
             css={getToolBarButtonStyles(navigationKey === "wizard")}
             onClick={() => onNavigate("wizard")}
           >
@@ -42,10 +43,10 @@ export const ToolBar = ({
               name={IconNames.UPGRADE}
               size={IconSize.SIZE_REGULAR}
             />
-          </button>
+          </Button>
         </ToolTip>
         <ToolTip content={"History"}>
-          <button
+          <Button
             css={getToolBarButtonStyles(navigationKey === "labels")}
             onClick={() => onNavigate("labels")}
           >
@@ -54,10 +55,10 @@ export const ToolBar = ({
               name={IconNames.LIST}
               size={IconSize.SIZE_REGULAR}
             />
-          </button>
+          </Button>
         </ToolTip>
         <ToolTip content={"Buy Label"}>
-          <button
+          <Button
             css={getToolBarButtonStyles(navigationKey === "purchase")}
             onClick={() => onNavigate("purchase")}
           >
@@ -66,16 +67,28 @@ export const ToolBar = ({
               name={IconNames.FAST_DELIVERY}
               size={IconSize.SIZE_REGULAR}
             />
-          </button>
+          </Button>
+        </ToolTip>
+        <ToolTip content={"Settings"}>
+          <Button
+            css={getToolBarButtonStyles(navigationKey === "settings")}
+            onClick={() => onNavigate("settings")}
+          >
+            <Icon
+              css={styles.icons}
+              name={IconNames.SETTINGS}
+              size={IconSize.SIZE_REGULAR}
+            />
+          </Button>
         </ToolTip>
 
-        <button css={getToolBarButtonStyles(false)} onClick={onClose}>
+        <Button css={getToolBarButtonStyles(false)} onClick={onClose}>
           <Icon
             css={styles.icons}
             name={IconNames.CLOSE}
             size={IconSize.SIZE_REGULAR}
           />
-        </button>
+        </Button>
       </div>
     </div>
   );
