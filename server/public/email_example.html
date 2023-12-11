@@ -1,0 +1,166 @@
+<html>
+<head>
+    <title>Example Email</title>
+    <style>
+        body {
+            max-width: 800px;
+            padding: 1rem;
+            border: 1px solid black;
+
+        }
+        .fakeEmail {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            line-height: 1.6em;
+            color: #000000;
+            background-color: #ffffff;
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+        }
+
+        .disclaimer {
+            border-bottom: 1px solid black
+        }
+
+        .detail {
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            width: 45%;
+            vertical-align: top;
+        }
+
+        .detailTitle {
+            font-weight: bold;
+        }
+
+        .detailTitle > .green {
+            font-weight: normal;
+            color: green;
+        }
+
+        .detailBody {
+            white-space: pre-line;
+        }
+
+        .orderTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orderTable > thead {
+            border-top: 2px solid color-mix(in oklab, cornflowerblue 12.5%, grey);
+            border-bottom: 2px solid color-mix(in oklab, cornflowerblue 12.5%, grey);
+            background-color: color-mix(in oklab, cornflowerblue 12.5%, white)
+        }
+
+        .orderTable > thead > tr > th {
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .orderTable > tbody > tr > td {
+            padding: 0.5rem;
+            border-bottom: 1px solid color-mix(in oklab, cornflowerblue 12.5%, grey);
+        }
+    </style>
+</head>
+<body>
+<div class="fakeEmail">
+    <div class="disclaimer">
+        Example Email Test Page
+    </div>
+
+    <div class="flex">
+        <svg height="75" width="75" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" stroke="grey" stroke-width="3" fill="grey"/>
+            <text fill="#ffffff" font-size="45" font-family="Verdana" x="25" y="65">JD</text>
+        </svg>
+        <div>
+            <p>John Doe via PayPal &lt;service@paypal.com&gt;</p>
+            <p>Notification of payment received</p>
+        </div>
+    </div>
+    <hr/>
+    <div>
+        <div>
+            It may take a few moments for this transaction to appear in your account.
+        </div>
+        <br/>
+        <div class="detail">
+            <div class="detailTitle">Seller Protection - <span class="green">Eligible</span></div>
+        </div>
+        <br/>
+        <div class="detail">
+            <div class="detailTitle">Transaction ID</div>
+
+            <div class="detailBody"><a href="https://example.com">1234567890</a></div>
+
+        </div>
+        <div class="detail">
+            <div class="detailTitle">Transaction date</div>
+            <div class="detailBody">1 Jan 2020</div>
+        </div>
+        <div class="detail">
+            <div class="detailTitle">Buyer</div>
+            <div class="detailBody"><!--
+            -->John Doe 2
+                <a href="mailto:john.doe.2@example.com" type="email">john.doe.2@example.com</a>
+                555-555-5555
+            </div>
+        </div>
+        <div class="detail">
+            <div class="detailTitle">Instructions to merchant</div>
+            <div class="detailBody">The buyer hasn't entered any instructions.</div>
+        </div>
+        <div class="detail">
+            <div class="detailTitle">Invoice ID</div>
+            <div class="detailBody">1234567890</div>
+        </div>
+        <br/>
+        <div class="detail">
+            <div class="detailTitle">Shipping Address - <span class="green">confirmed</span></div>
+            <div class="detailBody"><!--
+            -->John Doe 2
+                4301 Bull Creek Rd
+                Austin, TX 78731
+                United States
+            </div>
+        </div>
+        <div class="detail">
+            <div class="detailTitle">Shipping Details</div>
+            <div class="detailBody"><!--
+            -->12in x 6in x 3in
+                2lb 8oz
+            </div>
+        </div>
+        <table class="orderTable">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Qty</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Example Item</td>
+                <td>$1.00</td>
+                <td>1</td>
+                <td>$1.00</td>
+            </tr>
+            <tr>
+                <td>Example Item 2</td>
+                <td>$2.00</td>
+                <td>2</td>
+                <td>$4.00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
