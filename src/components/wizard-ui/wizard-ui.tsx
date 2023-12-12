@@ -25,6 +25,38 @@ const styles = createStyles({
   },
 });
 
+function findLeafNodesWithRegex(node: Node, regex: RegExp): Node[] {
+  const matchingNodes: Node[] = [];
+
+  // Base case: If the node is a text node, check if it matches the regex
+  if (node.nodeType === Node.TEXT_NODE) {
+    const textNode = node as Text;
+    if (regex.test(textNode.nodeValue || '')) {
+      matchingNodes.push(textNode);
+    }
+  } else {
+    // Recursive case: Traverse child nodes
+    for (let i = 0; i < node.childNodes.length; i++) {
+      matchingNodes.push(...findLeafNodesWithRegex(node.childNodes[i], regex));
+    }
+  }
+
+  return matchingNodes;
+}
+
+const blinker = async (borderStyleTargetStyle: CSSStyleDeclaration) => {
+  const previousBoxShadow = borderStyleTargetStyle.boxShadow;
+  const blinkBoxShadow =
+    "0 0 0 2px rgba(255,0,0,.8),0 0 0 4px rgba(255,255,255,.8),0 0 0 6px rgba(255,0,0,0.8)";
+
+  for (let i = 0; i < 3; i++) {
+    borderStyleTargetStyle.boxShadow = blinkBoxShadow;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    borderStyleTargetStyle.boxShadow = previousBoxShadow;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+};
+
 export const WizardUI = ({ handleSubmit }) => {
   const [selectedText, setSelectedText] = useState("");
   const [step, setStep] = useState(1);
@@ -352,20 +384,7 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
           ? borderStyleTarget.style
           : undefined;
       if (borderStyleTargetStyle !== undefined) {
-        const blinker = async () => {
-          const previousBoxShadow = borderStyleTargetStyle.boxShadow;
-          const blinkBoxShadow =
-            "0 0 0 2px rgba(255,0,0,.8),0 0 0 4px rgba(255,255,255,.8),0 0 0 6px rgba(255,0,0,0.8)";
-
-          for (let i = 0; i < 3; i++) {
-            borderStyleTargetStyle.boxShadow = blinkBoxShadow;
-            await new Promise((resolve) => setTimeout(resolve, 250));
-            borderStyleTargetStyle.boxShadow = previousBoxShadow;
-            await new Promise((resolve) => setTimeout(resolve, 250));
-          }
-        };
-
-        void blinker();
+        void blinker(borderStyleTargetStyle);
       }
 
       const addressText =
@@ -397,6 +416,7 @@ const StepProvideAddressTo = ({ next, selectedText = "" }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: ".45rem" }}>
       <h2>Select address to ship to</h2>
+      <p>(you may also select an address on the page with the mouse and we will attempt to parse it)</p>
       Name Country Address Line City State Postal Code
       {isShopifyPage && (
         <Input
@@ -495,9 +515,33 @@ const StepProvideDimensions = ({ next, selectedText = "" }) => {
   const handleChange = (name, value) =>
     setInputData({ ...inputData, [name]: value });
 
+  const scrapeDimensions = useCallback(() => {
+    const matchingNode = findLeafNodesWithRegex(document.body, /(\d+)in x (\d+)in x (\d+)in/)?.slice(0, 1);
+    if(matchingNode.length > 0 && matchingNode[0].textContent !== null) {
+      const dims = matchingNode[0].textContent.match(/(\d+)in x (\d+)in x (\d+)in/)?.slice(1);
+      if(dims !== undefined) {
+        const parent= matchingNode[0].parentElement;
+        if(parent) {
+          void blinker(parent.style);
+        }
+        const [length, width, height] = dims;
+        setInputData({
+          ...inputData,
+          "dimensions-length": length,
+          "dimensions-width": width,
+          "dimensions-height": height,
+        });
+      } else  {
+        alert("failed to scrape");
+      }
+    } else {
+      alert("failed to scrape");
+    }
+  }, [inputData])
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: ".45rem" }}>
-      <h2>Select the Dimensions</h2>
+      <h2>Select the Dimensions</h2><Input type="button" value="Try to get from page" onClick={scrapeDimensions}/>
       <Input
         autoFocus
         type="number"
@@ -573,9 +617,32 @@ const StepProvideWeight = ({ next, selectedText = "" }) => {
   const handleChange = (name, value) =>
     setInputData({ ...inputData, [name]: value });
 
+  const scrapeWeight = useCallback(() => {
+    const matchingNode = findLeafNodesWithRegex(document.body, /(\d+)lb (\d+)oz/)?.slice(0, 1);
+    if(matchingNode.length > 0 && matchingNode[0].textContent !== null) {
+      const weight = matchingNode[0].textContent.match(/((\d+)lb )?(\d+)oz/)?.slice(1);
+      if(weight !== undefined) {
+        const [_, pounds, ounces] = weight;
+        setInputData({
+          ...inputData,
+          "weight-pounds": pounds,
+          "weight-ounces": ounces,
+        });
+        const parent= matchingNode[0].parentElement;
+        if(parent) {
+          void blinker(parent.style);
+        }
+      } else  {
+        alert("failed to scrape");
+      }
+    } else {
+      alert("failed to scrape");
+    }
+  }, [inputData])
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: ".45rem" }}>
-      <h2>Select Weight</h2>
+      <h2>Select Weight</h2><Input type="button" value="Try to get from page" onClick={scrapeWeight}/>
       <Input
         autoFocus
         type="number"
