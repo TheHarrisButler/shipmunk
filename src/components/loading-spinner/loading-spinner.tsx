@@ -1,4 +1,4 @@
-import { Spinner, SpinnerSize } from "@packlink/giger";
+import { Spinner, SpinnerSize } from "@shipengine/giger";
 import { styles } from "./loading-spinner-styles";
 
 export type LoaderProps = {

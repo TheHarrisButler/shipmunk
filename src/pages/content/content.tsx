@@ -6,6 +6,7 @@ import {
   PurchaseLabel,
   AccountSettings,
 } from "@shipengine/elements";
+import { themeConfig } from "../../utils";
 import { styles, getOverFlowContainerStyles } from "./content-styles";
 import { WizardUI } from "@src/components/wizard-ui/wizard-ui";
 import Draggable from "react-draggable";
@@ -117,10 +118,9 @@ export const Content = () => {
       >
         <AlchemyProvider
           baseURL={"https://elements-staging.shipengine.com"}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          brandName={"paypal" as any}
-          cdnURL="https://cdn.packlink.com"
+          themeConfig={themeConfig}
           getToken={getToken}
+          cdnURL={"https://cdn.packlink.com"}
         >
           <RootPortalProvider>
             <div css={styles.contentContainer}>

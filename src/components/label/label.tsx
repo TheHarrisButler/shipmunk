@@ -1,7 +1,7 @@
 import { SE } from "@shipengine/alchemy";
 import { styles } from "./label.styles";
-import { Icon, IconSize } from "@packlink/giger";
-import { IconNames } from "@packlink/giger-theme";
+import { Icon, IconSize } from "@shipengine/giger";
+import { IconNames } from "@shipengine/giger-theme";
 import copy from "copy-to-clipboard";
 import { getServiceCodeFriendlyName } from "@src/utils";
 

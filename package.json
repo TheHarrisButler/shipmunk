@@ -13,10 +13,10 @@
   },
   "type": "module",
   "dependencies": {
-    "@packlink/giger": "^68.19.6",
-    "@shipengine/alchemy": "^2.4.1",
-    "@shipengine/elements": "^0.37.21",
-    "@shipengine/react-api": "^0.23.3",
+    "@shipengine/alchemy": "^5.0.3",
+    "@shipengine/elements": "^1.0.0",
+    "@shipengine/giger": "^1.0.2",
+    "@shipengine/react-api": "^1.5.2",
     "concurrently": "^8.2.2",
     "copy-to-clipboard": "^3.3.3",
     "cors": "^2.8.5",
@@ -65,8 +65,6 @@
     "yarn": ">=3.0.0"
   },
   "resolutions": {
-    "@shipengine/alchemy": "^2.4.1",
-    "@emotion/react": "11.11.1",
     "@types/react": "18.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

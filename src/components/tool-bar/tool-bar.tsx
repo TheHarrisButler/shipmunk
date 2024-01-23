@@ -1,8 +1,8 @@
 import { NavigationKey } from "@src/pages/content/content";
 import { Shipmunk } from "../shipmunk/shipmunk";
 import { styles, getToolBarButtonStyles } from "./tool-bar-styles";
-import { Icon, IconSize } from "@packlink/giger";
-import { IconNames } from "@packlink/giger-theme";
+import { Icon, IconSize } from "@shipengine/giger";
+import { IconNames } from "@shipengine/giger-theme";
 import { ToolTip } from "../tooltip/tooltip";
 import { Button } from "../button/button";
 
