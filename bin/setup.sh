@@ -2,18 +2,6 @@
 
 set -o pipefail
 
-# Set NPM_AUTH_TOKEN
-if [[ -z "${NPM_AUTH_TOKEN}" ]]; then
-    read -p "Please enter your NPM token: " npm_auth_token
-    echo "export NPM_AUTH_TOKEN=${npm_auth_token}" >> ~/.zshenv
-fi
-
-# Set PACKLINK_NPM_AUTH_TOKEN
-if [[ -z "${PACKLINK_NPM_AUTH_TOKEN}" ]]; then
-    read -p "Please enter the Packlink NPM token (located in the ShipEngine - Engineering 1Password vault): " packlink_npm_auth_token
-    echo "export PACKLINK_NPM_AUTH_TOKEN=${packlink_npm_auth_token}" >> ~/.zshenv
-fi
-
 source ~/.zshenv
 
 # Install or update yarn

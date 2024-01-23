@@ -25,7 +25,7 @@
   "devtools_page": "src/pages/devtools/index.html",
   "web_accessible_resources": [
     {
-      "resources": ["shipmunk.png"],
+      "resources": ["shipmunk.png", "public/fonts/*"],
       "matches": []
     }
   ]
