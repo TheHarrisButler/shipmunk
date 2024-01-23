@@ -1,4 +1,4 @@
-import { Grid, GridChild, Link, Typography } from "@packlink/giger";
+import { Grid, GridChild, Typography } from "@shipengine/giger";
 import type { Address } from "@shipengine/alchemy";
 
 type AddressDisplayProps = {

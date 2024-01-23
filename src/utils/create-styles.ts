@@ -1,5 +1,5 @@
 import { Interpolation } from "@emotion/serialize";
-import { Theme as GigerTheme } from "@packlink/giger-theme";
+import { Theme as GigerTheme } from "@shipengine/giger-theme";
 
 declare module "@emotion/react" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
